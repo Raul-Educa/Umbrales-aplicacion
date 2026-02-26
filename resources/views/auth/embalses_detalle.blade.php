@@ -39,7 +39,7 @@
                 <td>{{ $e->er_nombre }}</td>
                 <td>{{ $e->er_rio }}</td>
 
-                <td><strong>{{ $e->rde_valor ?? '---' }}</strong></td>
+                <td>{{ $e->rde_valor ?? '---' }}</td>
 
                 <td>{{ $e->rde_hora ?? 'No hay hora registrada' }}</td>
 

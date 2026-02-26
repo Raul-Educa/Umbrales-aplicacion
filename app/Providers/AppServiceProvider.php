@@ -24,18 +24,21 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('auth.plantilla', function ($view) use ($alertasService) {
 
-        // Guarda el resultado en la cache durante 5 min para tardar menos
-        $resumen = Cache::remember('sidebar_alertas', 300, function () use ($alertasService) {
-            return $alertasService->ResumenAlertas();
+
+            $resumen = Cache::remember('sidebar_alertas', 900, function () use ($alertasService) {
+                // Esto solo se ejecutará 1 vez cada 15 minutos
+                return $alertasService->ResumenAlertas();
+            });
+
+            // 2. Calculamos el total global usando los datos cacheados (Rapidísimo)
+            $totalGlobal = 0;
+            foreach ($resumen as $comunidad) {
+                $totalGlobal += $comunidad->sum('total');
+            }
+
+            // 3. Pasamos las variables a la vista
+            $view->with('resumenAlertas', $resumen);
+            $view->with('totalGlobal', $totalGlobal);
         });
-
-        $totalGlobal = 0;
-        foreach($resumen as $comunidad) {
-            $totalGlobal += $comunidad->sum('total');
-        }
-
-        $view->with('resumenAlertas', $resumen);
-        $view->with('totalGlobal', $totalGlobal);
-    });
     }
 }

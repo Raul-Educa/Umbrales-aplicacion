@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Cache;
 class AlertasUmbralesService
 {
     public function ResumenAlertas()
 {
+    return Cache::remember('sidebar_alertas', 900, function () {
     $ultimasLecturas = DB::table('umbrales_randatosepisodio')
         ->select(DB::raw('DISTINCT ON (rde_estacion) rde_estacion, rde_valor, rde_hora'))
         ->orderBy('rde_estacion')
@@ -31,10 +32,12 @@ class AlertasUmbralesService
         ->get();
 
     return $datos->groupBy('er_comunidad_autonoma_id');
+    });
 }
 
    public function DetalleAlertasPorCCAA($ccaaId)
 {
+    return Cache::remember('embalses_ccaa_' . $ccaaId, 900, function () use ($ccaaId) {
     $ultimasLecturas = DB::table('umbrales_randatosepisodio')
         ->select(DB::raw('DISTINCT ON (rde_estacion) rde_estacion, rde_valor, rde_hora'))
         ->orderBy('rde_estacion')
@@ -53,6 +56,7 @@ class AlertasUmbralesService
                 ELSE 0 END as nivel_alerta')
         )
         ->get();
+    });
 }
 public function BusquedaGlobal($termino)
 {
