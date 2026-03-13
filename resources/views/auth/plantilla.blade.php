@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión</title>
+    <title>Gestión Umbrales</title>
     <style>
         body,
         html {
@@ -43,6 +43,24 @@
             gap: 15px;
         }
 
+        .btn-logout {
+            text-decoration: none;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .btn-logout:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
         .wrapper {
             display: flex;
             margin-top: 50px;
@@ -79,24 +97,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             min-height: 200px;
-        }
-
-        .btn-logout {
-            text-decoration: none;
-            color: #ffffff;
-            border: 1px solid #ffffff;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            background: transparent;
-        }
-
-        .btn-logout:hover {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: white;
         }
 
         .check-menu {
@@ -155,206 +155,26 @@
         .check-menu:checked+.label-desplegable .flecha {
             transform: rotate(90deg);
         }
-
-        .contenedor-badges {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .badge-alerta {
-            display: inline-block;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 4px;
-            line-height: 17px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-            text-align: center;
-            border: 2px solid;
-        }
-
-        .alerta-3 {
-            border-color: #ff0000;
-            color: #ff0000;
-            background: rgba(255, 0, 0, 0.1);
-        }
-
-        .alerta-2 {
-            border-color: #ff8c00;
-            color: #ff8c00;
-            background: rgba(255, 140, 0, 0.1);
-        }
-
-        .alerta-1 {
-            border-color: #ffd700;
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-        }
-
-        .contenedor-badges {
-            display: flex;
-            gap: 4px;
-        }
-
-        .badge-alerta {
-            display: inline-block;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
-            line-height: 15px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 800;
-            text-align: center;
-            border: 2px solid;
-        }
-
-        .alerta-3 {
-            border-color: #d32f2f;
-            color: #000000;
-            background: #ffebee;
-        }
-
-        .alerta-2 {
-            border-color: #f57c00;
-            color: #000000;
-            background: #fff3e0;
-        }
-
-        .alerta-1 {
-            border-color: #fbc02d;
-            color: #000000;
-            background: #fff9c4;
-        }
-
-        .alerta-0 {
-            border-color: #9e9e9e;
-            color: #000000;
-            background: #f5f5f5;
-        }
-
-        .search-container {
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 85%;
-            max-width: 200px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 35px 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-            background-color: #f8f9fa;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-input:focus {
-            border-color: #007bff;
-            background-color: #fff;
-        }
-
-        .search-button {
-            position: absolute;
-            right: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.1s;
-        }
-
-        .search-button span {
-            font-size: 22px;
-            color: #000000;
-            line-height: 1;
-            font-weight: bold;
-        }
-
-        .search-button:hover {
-            transform: scale(1.2);
-        }
-
-        .menu-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .badge-container {
-            display: flex;
-            gap: 3px;
-        }
-
-        .badge-alerta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 10px;
-            font-weight: 700;
-            color: #fff;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .alerta-3 {
-            background-color: #d32f2f;
-        }
-
-        .alerta-2 {
-            background-color: #f57c00;
-        }
-
-        .alerta-1 {
-            background-color: #fbc02d;
-            color: #333;
-        }
-
-
-        .pill-global {
-            background-color: #455a64;
-            color: #ffffff;
-            padding: 1px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
     </style>
 </head>
 
 <body>
+    @inject('servicioEpisodios', 'App\Services\EpisodioService')
 
     <header class="header">
         <div class="usuario">
             Bienvenido, <strong>{{ session('usuario') }}</strong>
             <span>
                 (@if (session('is_superuser'))
-                    Superusuario
+                    Cuenta: Superusuario
                 @elseif(session('is_staff'))
-                    Staff
+                    Cuenta: Staff
                 @else
-                    Usuario Normal
+                    Cuenta: Usuario Normal
                 @endif)
             </span>
         </div>
+
         <div class="email">
             <strong>{{ session('email') }}</strong>
             <a href="/cerrarSesion" class="btn-logout">Cerrar Sesión</a>
@@ -363,106 +183,65 @@
 
     <div class="wrapper">
         <nav class="sidebar">
-            <div class="sidebar-titulo">Navegación de Datos</div>
+            <div class="sidebar-titulo">Gestión de Episodios</div>
             <ul style="list-style: none; padding: 0; margin: 0;">
+
                 <li>
-                    <a href="/inicio" class="label-desplegable">
-                        <span>Inicio</span>
+                    <a href="/inicio" class="label-desplegable"><span>Inicio</span></a>
+                </li>
+                <li class="nav-item">
+
+                    <a class="nav-link {{ request()->routeIs('mapa.global') ? 'active' : '' }}"
+                       href="{{ route('mapa.global') }}">
+                        Mapa Cuenca del Tajo
                     </a>
+
                 </li>
+                <form action="{{ route('buscar.global') }}" method="GET"
+                    style="display: flex; flex-grow: 1; max-width: 500px; margin: 0 30px;">
+                    <input type="text" name="query" placeholder="Buscador" required
+                        style="width: 100%; padding: 8px 15px; border-radius: 20px; border: none; outline: none; font-size: 0.9rem; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
+                </form>
 
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 15px;">
 
-                <div class="search-container">
-                    <form action="{{ route('embalses.buscar') }}" method="GET" class="search-box">
-                        <input type="text" name="q" class="search-input" placeholder="Buscador"
-                            value="{{ request('q') }}">
-                        <button type="submit" class="search-button">
-                            <span>🡆</span>
-                        </button>
-                    </form>
-                </div>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 0 15px 10px 15px;">
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 0 10px;">
+                {{-- CUENCA DEL TAJO (GLOBAL) --}}
                 <li>
-                    <input type="checkbox" id="ar" class="check-menu">
-                    <label for="ar" class="label-desplegable">
-                        <span>Aforo en Ríos</span>
+                    <input type="checkbox" id="menu_tajo" class="check-menu">
+                    <label for="menu_tajo" class="label-desplegable">
+                        <span>Cuenca del Tajo (Global)</span>
                         <span class="flecha">▶</span>
                     </label>
                     <ul class="submenu">
-                        <li><a href="/datos/ar/madrid">Madrid</a></li>
-                        <li><a href="/datos/ar/toledo">Toledo</a></li>
+                        <li><a href="#">Estado Actual</a></li>
+                        <li><a href="{{ route('tajo.activos') }}">Episodios Activos</a></li>
+                        <li><a href="{{ route('tajo.historico') }}">Histórico Episodios</a></li>
                     </ul>
                 </li>
 
-                <li>
-                    <input type="checkbox" id="mc" class="check-menu">
-                    <label for="mc" class="label-desplegable">
-                        <span>Marco de Control</span>
-                        <span class="flecha">▶</span>
-                    </label>
-                    <ul class="submenu">
-                        <li><a href="/datos/mc/zona1">Zona Centro</a></li>
-                    </ul>
-                </li>
+                {{-- COMUNIDADES AUTÓNOMAS --}}
+                @php
+                    $comunidades = $servicioEpisodios->obtenerComunidadesConEpisodios();
+                @endphp
 
-                <li>
-                    <input type="checkbox" id="r" class="check-menu">
-                    <label for="r" class="label-desplegable">
-                        <span>Rodeas</span>
-                        <span class="flecha">▶</span>
-                    </label>
-                    <ul class="submenu">
-                        <li><a href="/datos/r/general">Vista General</a></li>
-                    </ul>
-                </li>
+                @foreach ($comunidades as $ccaa)
+                    <li>
+                        <input type="checkbox" id="menu_ccaa_{{ $ccaa->c_id }}" class="check-menu">
+                        <label for="menu_ccaa_{{ $ccaa->c_id }}" class="label-desplegable">
+                            <span>{{ $ccaa->nombre }}</span>
+                            <span class="flecha">▶</span>
+                        </label>
+                        <ul class="submenu">
+                            <li><a href="#">Estado Actual</a></li>
+                            <li><a href="{{ route('ccaa.activos', $ccaa->c_id) }}">Episodios Activos</a></li>
+                            <li><a href="{{ route('ccaa.historico', $ccaa->c_id) }}">Histórico Episodios</a></li>
+                        </ul>
+                    </li>
+                @endforeach
 
-                <li>
-                    <input type="checkbox" id="e" class="check-menu">
-                    <label for="e" class="label-desplegable">
-                        <span>
-                            <span>Embalses</span>
-
-                            @if (isset($totalGlobal) && $totalGlobal > 0)
-                                <span class="pill-global">{{ $totalGlobal }}</span>
-                            @endif
-                        </span> <span class="flecha">▶</span>
-                    </label>
-                    <ul class="submenu">
-
-                        @php
-                            $comunidades = [
-                                8 => 'Castilla La Mancha',
-                                11 => 'Extremadura',
-                                13 => 'Madrid',
-                                7 => 'Castilla y León',
-                            ];
-                        @endphp
-
-                       @foreach ($comunidades as $id => $nombre)
-            <li>
-                <a href="/datos/e/{{ $id }}" style="display:flex; justify-content: space-between; align-items: center; padding: 8px 15px;">
-                    <span style="font-size: 13px;">{{ $nombre }}</span>
-
-                    <div class="contenedor-badges">
-                        @if (isset($resumenAlertas[$id]))
-                            @foreach ($resumenAlertas[$id]->sortByDesc('nivel') as $alerta)
-                                <span class="badge-alerta alerta-{{ $alerta->nivel }}">
-                                    {{ $alerta->total }}
-                                </span>
-                            @endforeach
-                        @else
-                            <span class="badge-alerta alerta-0">0</span>
-                        @endif
-                    </div>
-                </a>
-            </li>
-        @endforeach
-                    </ul>
-                </li>
-
+                {{-- GESTIÓN DE USUARIOS (PROBABLEMENTE EN DESUSO) --}}
                 @if (session('is_superuser'))
-                    <div class="sidebar-titulo" style="margin-top:20px;">Seguridad</div>
+                    <div class="sidebar-titulo" style="margin-top:30px;">Gestión Usuarios</div>
                     <li>
                         <a href="/crearUsuario" class="label-desplegable">
                             <span>Crear Usuario</span>
@@ -479,6 +258,21 @@
         </main>
     </div>
 
+
+    @vite(['resources/js/app.js'])
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Echo) {
+                console.log("Auto carga activada correctamente");
+
+                window.Echo.channel('panel-alertas')
+                    .listen('NuevoCambioRecibido', (e) => {
+                        console.log("Nuevo cambio recibido");
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
 </body>
 
 </html>

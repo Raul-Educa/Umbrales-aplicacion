@@ -1,5 +1,5 @@
 <?php
-
+//Logica para crear un nuevo usuario y diferenciar entre roles
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;

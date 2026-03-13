@@ -1,4 +1,10 @@
 <?php
+/*
+
+
+CODIGO QUE EN ESTE MOMENTO NO ESTA SIENDO UTILIZADO
+ES LA LOGICA PARA EL DETALLE DE EMBALSES
+
 
 namespace App\Http\Controllers;
 
@@ -35,19 +41,17 @@ class EmbalsesController extends Controller
             'titulo' => $titulo
         ]);
     }
-    public function buscar(Request $request)
+  public function buscar(Request $request)
 {
     $query = $request->input('q');
+    $resultados = $this->alertasService->BuscarGlobal($query);
 
-    if (empty($query)) {
-        return redirect()->back();
-    }
-
-    $embalses = $this->alertasService->BuscarEmbalses($query);
-
-    return view('auth.embalses_detalle', [
-        'embalses' => $embalses,
-        'titulo' => "Resultados para: '$query'"
+    return view('auth.busqueda_resultados', [
+        'embalses'       => $resultados['embalses'],
+        'roeas'          => $resultados['roeas'],
+        'marcos_control' => $resultados['marcos_control'],
+        'aforos'         => $resultados['aforos'],
+        'titulo'         => 'Resultados de la búsqueda: ' . $query
     ]);
 }
 }
