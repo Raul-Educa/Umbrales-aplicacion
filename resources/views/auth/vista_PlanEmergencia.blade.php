@@ -156,9 +156,9 @@
 
                             @if($c->plan_emergencia)
 
-                                <span style="float: right; font-size: 0.8em; background-color: #2c3e50; color: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #1a252f;">
+                                <span style="color: #000000;">
 
-                                    {{ $c->plan_emergencia }}
+                                    {{"|  " . $c->plan_emergencia }}
 
                                 </span>
 
