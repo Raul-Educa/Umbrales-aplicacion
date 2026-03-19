@@ -1,55 +1,29 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+// ASEGÚRATE DE QUE ESTA LÍNEA SEA EXACTAMENTE ASÍ:
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Class UmbralesCcaa
- * 
- * @property int $c_id
- * @property string $c_comunidad_autonoma
- * @property string|null $c_nombre_corto
- * 
- * @property Collection|UmbralesEmbalsesran[] $umbrales_embalsesrans
- * @property Collection|UmbralesRanepisodio[] $umbrales_ranepisodios
- * @property Collection|UmbralesUmbralesran[] $umbrales_umbralesrans
- *
- * @package App\Models
- */
 class UmbralesCcaa extends Model
 {
-	protected $table = 'umbrales_ccaa';
-	protected $primaryKey = 'c_id';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $table = 'umbrales_ccaa';
+    protected $primaryKey = 'c_id';
 
-	protected $casts = [
-		'c_id' => 'int'
-	];
+    public function provincias(): HasMany
+    {
+        return $this->hasMany(UmbralesProvincia::class, 'c_id', 'c_id');
+    }
+    public function getPlanEmergenciaAttribute()
+    {
+        $nombre = strtoupper($this->c_comunidad_autonoma);
 
-	protected $fillable = [
-		'c_comunidad_autonoma',
-		'c_nombre_corto'
-	];
+        if (str_contains($nombre, 'MADRID')) { return 'INUNCAM'; }
+        if (str_contains($nombre, 'CASTILLA Y LE')) { return 'INUNcyl'; }
+        if (str_contains($nombre, 'MANCHA')) { return 'PRICAM'; }
+        if (str_contains($nombre, 'EXTREMADURA')) { return 'INUNCAEX'; }
 
-	public function umbrales_embalsesrans()
-	{
-		return $this->hasMany(UmbralesEmbalsesran::class, 'er_comunidad_autonoma_id');
-	}
-
-	public function umbrales_ranepisodios()
-	{
-		return $this->hasMany(UmbralesRanepisodio::class, 're_ccaa_id');
-	}
-
-	public function umbrales_umbralesrans()
-	{
-		return $this->hasMany(UmbralesUmbralesran::class, 'ur_comunidad_autonoma_id');
-	}
+        return null;
+    }
 }

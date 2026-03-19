@@ -1,33 +1,13 @@
 <?php
-
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class UmbralesProvincia
- * 
- * @property int $p_id
- * @property string $p_provincia
- *
- * @package App\Models
- */
 class UmbralesProvincia extends Model
 {
-	protected $table = 'umbrales_provincias';
-	protected $primaryKey = 'p_id';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $table = 'umbrales_provincias';
+    protected $primaryKey = 'p_id';
 
-	protected $casts = [
-		'p_id' => 'int'
-	];
-
-	protected $fillable = [
-		'p_provincia'
-	];
+    // Para que Laravel sepa que p_id no es autoincremental si lo llenamos a mano
+    public $incrementing = true;
 }

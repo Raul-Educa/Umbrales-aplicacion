@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AuthUser
- * 
+ *
  * @property int $id
  * @property string $password
  * @property Carbon|null $last_login
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $is_staff
  * @property bool $is_active
  * @property Carbon $date_joined
- * 
+ *
  * @property Collection|AuthUserGroup[] $auth_user_groups
  * @property Collection|AuthUserUserPermission[] $auth_user_user_permissions
  * @property Collection|DjangoAdminLog[] $django_admin_logs

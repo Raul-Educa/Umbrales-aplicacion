@@ -23,10 +23,11 @@ class AuthController extends Controller
         if ($usuario && Hash::check($request->password, $usuario->password)) {
             // Crea la sessión
             session([
-                'usuario' => $usuario->username,
-                'email' => $usuario->email,
+                'id'           => $usuario->id,
+                'usuario'      => $usuario->username,
+                'email'        => $usuario->email,
                 'is_superuser' => $usuario->is_superuser,
-                'is_staff' => $usuario->is_staff
+                'is_staff'     => $usuario->is_staff
             ]);
 
             return redirect('/inicio');

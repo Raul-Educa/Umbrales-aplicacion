@@ -6,7 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GraficoController;
 use App\Http\Controllers\EpisodioController;
-
+use App\Http\Controllers\EmergenciaController;
 // Estos son antiguos, los dejo por si en un futuro hacen falta
 
 // use App\Http\Controllers\EmbalsesController;
@@ -28,14 +28,21 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/cerrarSesion', [AuthController::class, 'cerrarSesion']);
 
-//VISTAS DE USUARIOS
+// ==========================================
+// VISTAS Y GESTIÓN DE USUARIOS
+// ==========================================
 
-Route::get('/crearUsuario', function () {
-    return view('auth.crearUsuario');
-});
+// 1. Mostrar la página (Llama a la función gestionarUsuarios de tu controlador)
+Route::get('/confUsuarios', [UserController::class, 'gestionarUsuarios'])->name('confUsuarios');
+
+// 2. Procesar la creación del usuario (POST)
 Route::post('/crearUsuario', [UserController::class, 'guardarUsuario']);
 
-
+// 3. Eliminar usuario (DELETE)
+Route::delete('/eliminarUsuario/{id}', [UserController::class, 'eliminarUsuario'])->name('eliminarUsuario');
+// Rutas para Editar Usuario
+Route::get('/editarUsuario/{id}', [UserController::class, 'mostrarFormularioEditar'])->name('editarUsuario');
+Route::put('/actualizarUsuario/{id}', [UserController::class, 'actualizarUsuario'])->name('actualizarUsuario');
 
 // Cuenca del Tajo (Global)
 Route::get('/tajo/activos', [EpisodioController::class, 'activosGlobal'])->name('tajo.activos');
@@ -61,6 +68,17 @@ Route::post('/episodio/{id}/renombrar', [EpisodioController::class, 'renombrarEp
 
 //Ruta para el mapa global del Tajo
 Route::get('/mapaGeneralTajo', [App\Http\Controllers\EpisodioController::class, 'mapaGlobal'])->name('mapa.global');
+
+
+
+
+// Rutas para el gestor de emergencias
+Route::get('/emergencias/nueva', [EmergenciaController::class, 'crear'])->name('emergencias.crear');
+Route::post('/emergencias/guardar', [EmergenciaController::class, 'guardar'])->name('emergencias.guardar');
+
+Route::get('/emergencias/vista-plan', [EmergenciaController::class, 'vistaPlanEmergencia'])->name('emergencias.vistaPlan');
+
+
 
 /*
 Solo la he usado o se usara para recargar desde la URL
