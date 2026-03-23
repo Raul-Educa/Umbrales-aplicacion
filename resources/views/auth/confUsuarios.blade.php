@@ -6,34 +6,34 @@
 
 /* CONTENEDOR GENERAL */
 
-.panel-admin{
+.panelAdmin{
     max-width:1200px;
     margin:40px auto;
 }
 
 /* CABECERA */
 
-.panel-header{
+.cabeceraPanel{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:25px;
 }
 
-.panel-left{
+.izquierdaPanel{
     display:flex;
     align-items:center;
     gap:15px;
 }
 
-.panel-header h2{
+.cabeceraPanel h2{
     margin:0;
     font-size:1.6rem;
     font-weight:600;
     color:#1f2937;
 }
 
-.badge-total{
+.etiquetaTotal{
     background:#1f2937;
     color:white;
     padding:6px 14px;
@@ -44,7 +44,7 @@
 
 /* BOTONES */
 
-.btn{
+.boton{
     border:none;
     border-radius:6px;
     padding:8px 14px;
@@ -55,93 +55,93 @@
     transition:all .2s;
 }
 
-.btn-volver{
+.botonVolver{
     background:#6b7280;
     color:white;
 }
 
-.btn-volver:hover{
+.botonVolver:hover{
     background:#4b5563;
 }
 
-.btn-anadir{
+.botonAnadir{
     background:#2563eb;
     color:white;
 }
 
-.btn-anadir:hover{
+.botonAnadir:hover{
     background:#1d4ed8;
 }
 
-.btn-guardar{
+.botonGuardar{
     background:#16a34a;
     color:white;
     padding:10px 20px;
 }
 
-.btn-guardar:hover{
+.botonGuardar:hover{
     background:#15803d;
 }
 
-.btn-editar{
+.botonEditar{
     border:1px solid #2563eb;
     color:#2563eb;
     background:white;
 }
 
-.btn-editar:hover{
+.botonEditar:hover{
     background:#2563eb;
     color:white;
 }
 
-.btn-eliminar{
+.botonEliminar{
     border:1px solid #dc2626;
     color:#dc2626;
     background:white;
 }
 
-.btn-eliminar:hover{
+.botonEliminar:hover{
     background:#dc2626;
     color:white;
 }
 
 /* FORMULARIO */
 
-#contenedor-formulario{
+#contenedorFormulario{
     display:none;
     margin-top:15px;
     margin-bottom:25px;
 }
 
-.card-formulario{
+.tarjetaFormulario{
     background:white;
     border-radius:10px;
     border:1px solid #e5e7eb;
     box-shadow:0 4px 16px rgba(0,0,0,0.04);
     padding:25px;
-    animation:fadeIn .25s ease;
+    animation:aparecerSuave .25s ease;
 }
 
-.form-header h3{
+.cabeceraFormulario h3{
     margin:0;
     font-size:1.2rem;
     color:#111827;
 }
 
-.form-header p{
+.cabeceraFormulario p{
     margin:4px 0 18px 0;
     font-size:0.85rem;
     color:#6b7280;
 }
 
-@keyframes fadeIn{
+@keyframes aparecerSuave{
     from{opacity:0;transform:translateY(-5px);}
     to{opacity:1;transform:translateY(0);}
 }
 
 /* GRID FORMULARIO */
 
-.form-grid{
+.cuadriculaFormulario{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:18px;
@@ -149,12 +149,12 @@
 
 /* CAMPOS */
 
-.form-group{
+.grupoFormulario{
     display:flex;
     flex-direction:column;
 }
 
-.form-label{
+.etiquetaFormulario{
     font-size:0.75rem;
     font-weight:600;
     text-transform:uppercase;
@@ -163,7 +163,7 @@
     margin-bottom:4px;
 }
 
-.input-conf{
+.entradaConf{
     padding:9px 10px;
     border:1px solid #d1d5db;
     border-radius:6px;
@@ -171,7 +171,7 @@
     transition:border .2s, box-shadow .2s;
 }
 
-.input-conf:focus{
+.entradaConf:focus{
     outline:none;
     border-color:#2563eb;
     box-shadow:0 0 0 2px rgba(37,99,235,0.15);
@@ -179,7 +179,7 @@
 
 /* FOOTER FORMULARIO */
 
-.form-footer{
+.pieFormulario{
     margin-top:10px;
     display:flex;
     justify-content:flex-end;
@@ -187,7 +187,7 @@
 
 /* TABLA */
 
-.card-tabla{
+.tarjetaTabla{
     background:white;
     border-radius:10px;
     border:1px solid #e5e7eb;
@@ -195,16 +195,16 @@
     overflow:hidden;
 }
 
-.tabla-hidro{
+.tablaHidro{
     width:100%;
     border-collapse:collapse;
 }
 
-.tabla-hidro thead{
+.tablaHidro thead{
     background:#f9fafb;
 }
 
-.tabla-hidro th{
+.tablaHidro th{
     text-align:left;
     padding:14px;
     font-size:0.75rem;
@@ -214,19 +214,19 @@
     letter-spacing:.6px;
 }
 
-.tabla-hidro td{
+.tablaHidro td{
     padding:14px;
     font-size:0.85rem;
     border-top:1px solid #f1f5f9;
 }
 
-.tabla-hidro tbody tr:hover{
+.tablaHidro tbody tr:hover{
     background:#f9fafb;
 }
 
 /* ROLES */
 
-.pill-rol{
+.etiquetaRol{
     padding:5px 12px;
     border-radius:20px;
     font-size:0.7rem;
@@ -234,24 +234,24 @@
     text-transform:uppercase;
 }
 
-.pill-superuser{
+.rolSuperusuario{
     background:#fee2e2;
     color:#b91c1c;
 }
 
-.pill-staff{
+.rolStaff{
     background:#fef3c7;
     color:#92400e;
 }
 
-.pill-normal{
+.rolNormal{
     background:#e2e8f0;
     color:#334155;
 }
 
 /* ALERTA */
 
-.alert-success{
+.alertaExito{
     background:#ecfdf5;
     border:1px solid #bbf7d0;
     color:#065f46;
@@ -261,7 +261,7 @@
     font-size:0.85rem;
 }
 
-.error-msg{
+.mensajeError{
     color:#dc2626;
     font-size:0.75rem;
     font-weight:600;
@@ -271,37 +271,37 @@
 </style>
 
 
-<div class="panel-admin">
+<div class="panelAdmin">
 
 
 {{-- CABECERA --}}
 
-<div class="panel-header">
+<div class="cabeceraPanel">
 
-<div class="panel-left">
-<a href="javascript:history.back()" class="btn btn-volver">Volver</a>
+<div class="izquierdaPanel">
+<a href="javascript:history.back()" class="boton botonVolver">Volver</a>
 <h2>Gestión de Usuarios</h2>
 </div>
 
-<span class="badge-total">
+<span class="etiquetaTotal">
 {{ count($usuarios) }} Usuarios
 </span>
 
 </div>
 
 
-<button onclick="toggleFormulario()" class="btn btn-anadir" id="btn-toggle">
+<button onclick="alternarFormulario()" class="boton botonAnadir" id="botonAlternar">
 Añadir nuevo usuario
 </button>
 
 
 {{-- FORMULARIO --}}
 
-<div id="contenedor-formulario">
+<div id="contenedorFormulario">
 
-<div class="card-formulario">
+<div class="tarjetaFormulario">
 
-<div class="form-header">
+<div class="cabeceraFormulario">
 <h3>Crear nuevo usuario</h3>
 <p>Introduce la información necesaria para registrar un usuario.</p>
 </div>
@@ -309,44 +309,44 @@ Añadir nuevo usuario
 <form action="/crearUsuario" method="POST">
 @csrf
 
-<div class="form-grid">
+<div class="cuadriculaFormulario">
 
-<div class="form-group">
-<label class="form-label">Username</label>
-<input type="text" name="username" class="input-conf" value="{{ old('username') }}" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Username</label>
+<input type="text" name="username" class="entradaConf" value="{{ old('username') }}" required>
 </div>
 
-<div class="form-group">
-<label class="form-label">Email</label>
-<input type="email" name="email" class="input-conf" value="{{ old('email') }}" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Email</label>
+<input type="email" name="email" class="entradaConf" value="{{ old('email') }}" required>
 </div>
 
-<div class="form-group">
-<label class="form-label">Nombre</label>
-<input type="text" name="first_name" class="input-conf" value="{{ old('first_name') }}" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Nombre</label>
+<input type="text" name="first_name" class="entradaConf" value="{{ old('first_name') }}" required>
 </div>
 
-<div class="form-group">
-<label class="form-label">Apellidos</label>
-<input type="text" name="last_name" class="input-conf" value="{{ old('last_name') }}" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Apellidos</label>
+<input type="text" name="last_name" class="entradaConf" value="{{ old('last_name') }}" required>
 </div>
 
-<div class="form-group">
-<label class="form-label">Contraseña</label>
-<input type="password" name="password" class="input-conf" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Contraseña</label>
+<input type="password" name="password" class="entradaConf" required>
 @error('password')
-<span class="error-msg">La contraseña no cumple los requisitos</span>
+<span class="mensajeError">La contraseña no cumple los requisitos</span>
 @enderror
 </div>
 
-<div class="form-group">
-<label class="form-label">Confirmar contraseña</label>
-<input type="password" name="password_confirmation" class="input-conf" required>
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Confirmar contraseña</label>
+<input type="password" name="password_confirmation" class="entradaConf" required>
 </div>
 
-<div class="form-group">
-<label class="form-label">Rol</label>
-<select name="rol" class="input-conf">
+<div class="grupoFormulario">
+<label class="etiquetaFormulario">Rol</label>
+<select name="rol" class="entradaConf">
 <option value="usuario">Usuario</option>
 <option value="staff">Staff</option>
 <option value="superuser">Superusuario</option>
@@ -355,8 +355,8 @@ Añadir nuevo usuario
 
 </div>
 
-<div class="form-footer">
-<button type="submit" class="btn btn-guardar">
+<div class="pieFormulario">
+<button type="submit" class="boton botonGuardar">
 Guardar usuario
 </button>
 </div>
@@ -370,16 +370,16 @@ Guardar usuario
 
 {{-- TABLA --}}
 
-<div class="card-tabla">
+<div class="tarjetaTabla">
 
 @if (session('exito') || session('success'))
-<div class="alert-success">
+<div class="alertaExito">
 {{ session('exito') ?? session('success') }}
 </div>
 @endif
 
 
-<table class="tabla-hidro">
+<table class="tablaHidro">
 
 <thead>
 <tr>
@@ -406,13 +406,13 @@ Guardar usuario
 <td>
 
 @if($u->is_superuser)
-<span class="pill-rol pill-superuser">Superusuario</span>
+<span class="etiquetaRol rolSuperusuario">Superusuario</span>
 
 @elseif($u->is_staff)
-<span class="pill-rol pill-staff">Staff</span>
+<span class="etiquetaRol rolStaff">Staff</span>
 
 @else
-<span class="pill-rol pill-normal">Usuario</span>
+<span class="etiquetaRol rolNormal">Usuario</span>
 @endif
 
 </td>
@@ -421,7 +421,7 @@ Guardar usuario
 
 <div style="display:flex;gap:8px;justify-content:center">
 
-<a href="{{ route('editarUsuario', $u->id) }}" class="btn btn-editar">
+<a href="{{ route('editarUsuario', $u->id) }}" class="boton botonEditar">
 Editar
 </a>
 
@@ -433,7 +433,7 @@ onsubmit="return confirm('¿Eliminar usuario {{ $u->username }}?');">
 @csrf
 @method('DELETE')
 
-<button class="btn btn-eliminar">
+<button class="boton botonEliminar">
 Eliminar
 </button>
 
@@ -464,10 +464,10 @@ Eliminar
 
 <script>
 
-function toggleFormulario(){
+function alternarFormulario(){
 
-const div=document.getElementById('contenedor-formulario');
-const btn=document.getElementById('btn-toggle');
+const div=document.getElementById('contenedorFormulario');
+const btn=document.getElementById('botonAlternar');
 
 if(div.style.display==='none'||div.style.display===''){
 
@@ -486,7 +486,7 @@ btn.style.background='#2563eb';
 }
 
 @if ($errors->any())
-document.addEventListener('DOMContentLoaded',()=>{toggleFormulario();});
+document.addEventListener('DOMContentLoaded',()=>{alternarFormulario();});
 @endif
 
 </script>

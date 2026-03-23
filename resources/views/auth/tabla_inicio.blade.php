@@ -1,4 +1,4 @@
-<table class="tabla-hidro">
+<table class="tablaHidro">
     <thead>
         <tr>
             <th>Código / Nombre</th>
@@ -11,16 +11,16 @@
             <th>Estado Actual</th>
             <th>
                 Fecha/Hora
-                <div class="icono-info">
+                <div class="iconoInfo">
                     ?
-                    <span class="bocadillo-texto">Muestra la fecha y hora exacta del último dato recibido por esta estación</span>
+                    <span class="bocadilloTexto">Muestra la fecha y hora exacta del último dato recibido por esta estación</span>
                 </div>
             </th>
             <th style="width: 150px;">
                 Gráfico
-                <div class="icono-info">
+                <div class="iconoInfo">
                     ?
-                    <span class="bocadillo-texto">Clic en el grafico para ver un gráfico detallado con distintos rangos de tiempo</span>
+                    <span class="bocadilloTexto">Clic en el grafico para ver un gráfico detallado con distintos rangos de tiempo</span>
                 </div>
             </th>
         </tr>
@@ -28,7 +28,7 @@
     <tbody>
         @forelse($estaciones as $e)
             {{-- Estilos dinámicos segun su nivel de alerta --}}
-            <tr class="fila-alerta-{{ $e->nivel_alerta }}">
+            <tr class="filaAlerta{{ $e->nivel_alerta }}">
                 <td>
                     <strong>{{ $e->codigo ?? '---' }}</strong><br>
                     {{ $e->nombre }}
@@ -39,7 +39,7 @@
 
                 <td>
                     {{ $e->tag_salida ?? '---' }}<br>
-                    <span class="val-box">
+                    <span class="cajaValor">
                         Valor:
                         <strong>{{ is_numeric($e->valor) ? number_format((float) $e->valor, 3, ',', '.') : $e->valor ?? '---' }}</strong>
                     </span>
@@ -47,7 +47,7 @@
 
                 <td>
                     {{ $e->tag_secundario ?? '---' }}<br>
-                    <span class="val-box">
+                    <span class="cajaValor">
                         Valor:
                         <strong>{{ isset($e->valor_acc) && is_numeric($e->valor_acc) ? number_format((float) $e->valor_acc, 3, ',', '.') : $e->valor_acc ?? '---' }}</strong>
                     </span>
@@ -70,7 +70,7 @@
 
                 {{-- Estado Actual --}}
                 <td>
-                    <span class="status-dot dot-{{ $e->nivel_alerta }}"></span>
+                    <span class="puntEstado punt{{ $e->nivel_alerta }}"></span>
                     <b>{{ $e->nivel_alerta == 3 ? 'ALERTA 3' : ($e->nivel_alerta == 2 ? 'ALERTA 2' : ($e->nivel_alerta == 1 ? 'ALERTA 1' : 'NORMAL')) }}</b>
                 </td>
 
@@ -78,7 +78,7 @@
 
                 {{-- Gráfico --}}
                 <td>
-                    <div class="grafico-fila" data-codigo="{{ $e->codigo }}"
+                    <div class="filaGrafico" data-codigo="{{ $e->codigo }}"
                         style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center;">
                         <small style="color: #999; font-size: 10px;">Cargando...</small>
                     </div>

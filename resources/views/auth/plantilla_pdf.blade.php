@@ -137,7 +137,7 @@
 
 <div class="cabecera">
     <div class="cabecera-organismo">Sistema de Control de Cuenca</div>
-    <div class="cabecera-titulo">REPORTE DE SITUACIÓN</div>
+    <div class="cabecera-titulo">REPORTE DE SITUACIÓN AUTOMATIZADO</div>
 </div>
 
 <table class="info-table">
@@ -162,11 +162,7 @@
     </div>
 </div>
 
-<div class="meta-block">
-    <div class="meta-item"><strong>Origen de datos:</strong> Sistema automatizado de monitorización</div>
-    <div class="meta-item"><strong>Tipo de documento:</strong> Reporte autogenerado</div>
-    <div class="meta-item"><strong>Validez:</strong> Informativa</div>
-</div>
+
 
 </body>
 </html>

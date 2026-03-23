@@ -13,7 +13,7 @@
             padding: 40px;
         }
 
-        #chart-container {
+        #contenedorGrafico {
             background: white;
             padding: 20px;
             border-radius: 12px;
@@ -22,12 +22,12 @@
             margin: auto;
         }
 
-        #selector-container {
+        #contenedorSelector {
             text-align: center;
             margin-bottom: 15px;
         }
 
-        #no-data {
+        #sinDatos {
             text-align: center;
             color: #ef4444;
             font-weight: bold;
@@ -39,11 +39,11 @@
 
 <body>
 
-    <div id="chart-container">
+    <div id="contenedorGrafico">
         <h2 style="text-align: center;">Historial de Estación: <span style="color: #3b82f6;">{{ $codigo }}</span>
         </h2>
 
-        <div id="selector-container">
+        <div id="contenedorSelector">
             <label for="rango">Seleccionar rango:</label>
             <select id="rango">
                 <option value="7">Últimos 7 días</option>
@@ -52,15 +52,15 @@
             </select>
         </div>
 
-        <div id="no-data">No hay datos disponibles para este rango.</div>
-        <div id="chart"></div>
+        <div id="sinDatos">No hay datos disponibles para este rango.</div>
+        <div id="grafico"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const selector = document.getElementById('rango');
-            const noDataDiv = document.getElementById('no-data');
-            let chart;
+            const divSinDatos = document.getElementById('sinDatos');
+            let grafico;
 
             async function cargarGrafico() {
                 const dias = selector.value;
@@ -71,29 +71,29 @@
                     const json = await res.json();
 
                     if (!json.fechas.length || !json.valores.length) {
-                        if (chart) chart.updateSeries([{
+                        if (grafico) grafico.updateSeries([{
                             data: []
                         }, {
                             data: []
                         }]);
-                        noDataDiv.style.display = 'block';
+                        divSinDatos.style.display = 'block';
                         return;
                     }
-                    noDataDiv.style.display = 'none';
+                    divSinDatos.style.display = 'none';
 
                     // Datos para ApexCharts
-                    const areaData = json.fechas.map((f, i) => ({
+                    const datosArea = json.fechas.map((f, i) => ({
                         x: f,
                         y: json.valores[i]
                     }));
 
                     // Línea de umbral, aquí ejemplo fijo en 75 (puedes cambiar o sacar de la BD)
-                    const umbral = areaData.map(d => ({
+                    const umbral = datosArea.map(d => ({
                         x: d.x,
                         y: 75
                     }));
 
-                    const options = {
+                    const opciones = {
                         chart: {
                             type: 'line',
                             height: 450,
@@ -108,7 +108,7 @@
                         series: [{
                                 name: 'Valor Medio',
                                 type: 'area',
-                                data: areaData
+                                data: datosArea
                             },
                             {
                                 name: 'Umbral Máximo',
@@ -159,18 +159,18 @@
                         }
                     };
 
-                    if (chart) {
-                        chart.updateOptions(options);
-                        chart.updateSeries(options.series);
+                    if (grafico) {
+                        grafico.updateOptions(opciones);
+                        grafico.updateSeries(opciones.series);
                     } else {
-                        chart = new ApexCharts(document.querySelector("#chart"), options);
-                        chart.render();
+                        grafico = new ApexCharts(document.querySelector("#grafico"), opciones);
+                        grafico.render();
                     }
 
                 } catch (err) {
                     console.error("Error cargando datos:", err);
-                    noDataDiv.innerText = 'Error al cargar los datos.';
-                    noDataDiv.style.display = 'block';
+                    divSinDatos.innerText = 'Error al cargar los datos.';
+                    divSinDatos.style.display = 'block';
                 }
             }
 

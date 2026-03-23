@@ -2,404 +2,476 @@
 <html lang="es">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestión Umbrales</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Umbrales</title>
 
-<style>
+    <style>
+        /* ===== BASE ===== */
 
-/* ===== BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
-body,html{
-margin:0;
-padding:0;
-font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-height:100%;
-background:#eef1f4;
-color:#1f2937;
-overflow:hidden; /* IMPORTANTE: elimina scroll exterior */
-}
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100%;
+            background: #f5f5f5;
+            color: #1f2937;
+            overflow: hidden;
+        }
 
-/* ===== HEADER ===== */
+        /* ===== CABECERA ===== */
 
-.header{
-height:60px;
-background:#3f4750;
-color:white;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:0 30px;
-box-shadow:0 2px 8px rgba(0,0,0,0.15);
-position:fixed;
-top:0;
-width:100%;
-z-index:1000;
-box-sizing:border-box;
-}
+        .cabecera {
+            height: 60px;
+            background: #2d3748;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #1a202c;
+        }
 
-.usuario{
-font-size:0.9rem;
-}
+        .cabeceraIzquierda {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
 
-.usuario strong{
-font-weight:600;
-}
+        .textoLogo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
 
-.email{
-display:flex;
-align-items:center;
-gap:15px;
-font-size:0.85rem;
-opacity:.95;
-}
+        .infoUsuario {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            padding-left: 24px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+        }
 
-/* ===== LOGOUT ===== */
+        .nombreUsuario {
+            color: #ffffff;
+            font-weight: 600;
+        }
 
-.btn-logout{
-text-decoration:none;
-color:white;
-border:1px solid rgba(255,255,255,.4);
-padding:6px 14px;
-border-radius:6px;
-font-size:0.8rem;
-font-weight:600;
-transition:all .2s;
-}
+        .insigniaRol {
+            padding: 3px 10px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #93c5fd;
+        }
 
-.btn-logout:hover{
-background:#ef4444;
-border-color:#ef4444;
-}
+        .cabeceraDerecha {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
-/* ===== LAYOUT ===== */
+        .textoEmail {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
 
-.wrapper{
-display:flex;
-margin-top:60px;
-height:calc(100vh - 60px);
-overflow:hidden;
-}
+        /* ===== CERRAR SESION ===== */
 
-/* ===== SIDEBAR ===== */
+        .botonCerrar {
+            text-decoration: none;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
 
-.sidebar{
-width:250px;
-background:#5b636c;
-color:#e5e7eb;
-padding-top:15px;
-overflow-y:auto; /* scroll sidebar */
-flex-shrink:0;
-box-shadow:2px 0 10px rgba(0,0,0,.1);
-}
+        .botonCerrar:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
 
-/* TITULOS */
+        /* ===== LAYOUT ===== */
 
-.sidebar-titulo{
-padding:12px 22px;
-font-size:.7rem;
-text-transform:uppercase;
-color:#cbd5e1;
-letter-spacing:1px;
-font-weight:600;
-}
+        .contenedor {
+            display: flex;
+            margin-top: 60px;
+            height: calc(100vh - 60px);
+            overflow: hidden;
+        }
 
-/* LINKS */
+        /* ===== BARRA LATERAL ===== */
 
-.label-desplegable{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:11px 22px;
-font-size:0.9rem;
-color:#f1f5f9;
-text-decoration:none;
-cursor:pointer;
-transition:all .2s;
-border-left:3px solid transparent;
-}
+        .barraLateral {
+            width: 260px;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding-top: 16px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 1px solid #1a202c;
+        }
 
-.label-desplegable:hover{
-background:#4b525a;
-border-left:3px solid #3b82f6;
-}
+        /* TITULOS */
 
-.active-link{
-background:#4b525a;
-border-left:3px solid #3b82f6;
-font-weight:600;
-}
+        .tituloSeccion {
+            padding: 12px 20px 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
 
-/* SUBMENU */
+        .tituloSeccion:first-child {
+            margin-top: 0;
+        }
 
-.submenu{
-max-height:0;
-overflow:hidden;
-background:#525960;
-transition:max-height .35s ease;
-list-style:none;
-padding:0;
-margin:0;
-}
+        /* LINKS */
 
-.submenu li a{
-display:block;
-padding:9px 40px;
-font-size:.85rem;
-color:#d1d5db;
-text-decoration:none;
-transition:.2s;
-}
+        .enlaceDesplegable {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
 
-.submenu li a:hover{
-background:#454c54;
-color:white;
-}
+        .enlaceDesplegable:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            color: #ffffff;
+        }
 
-/* CHECK MENU */
+        .enlaceActivo {
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 3px solid #3b82f6;
+            color: #ffffff;
+            font-weight: 500;
+        }
 
-.check-menu{
-display:none;
-}
+        /* SUBMENU */
 
-.check-menu:checked + .label-desplegable + .submenu{
-max-height:500px;
-}
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.15);
+            transition: max-height 0.25s ease;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-/* FLECHA */
+        .submenu li a {
+            display: block;
+            padding: 8px 20px 8px 40px;
+            font-size: 0.85rem;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
 
-.flecha{
-font-size:.7rem;
-opacity:.7;
-transition:transform .25s;
-}
+        .submenu li a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #ffffff;
+            border-left: 3px solid #3b82f6;
+        }
 
-.check-menu:checked + .label-desplegable .flecha{
-transform:rotate(90deg);
-}
+        /* CHECK MENU */
 
-/* ===== BUSCADOR ===== */
+        .checkMenu {
+            display: none;
+        }
 
-.sidebar form{
-padding:10px 20px 15px 20px;
-}
+        .checkMenu:checked+.enlaceDesplegable+.submenu {
+            max-height: 500px;
+            padding: 4px 0;
+        }
 
-.sidebar input{
-width:100%;
-padding:8px 12px;
-border-radius:6px;
-border:none;
-font-size:.85rem;
-outline:none;
-background:#6b7280;
-color:white;
-}
+        /* FLECHA */
 
-.sidebar input::placeholder{
-color:#e5e7eb;
-}
+        .flecha {
+            font-size: 0.7rem;
+            color: #a0aec0;
+            transition: transform 0.2s;
+        }
 
-/* ===== CONTENIDO ===== */
+        .checkMenu:checked+.enlaceDesplegable .flecha {
+            transform: rotate(90deg);
+        }
 
-.main-content{
-flex-grow:1;
-padding:35px;
-overflow-y:auto; /* único scroll principal */
-height:100%;
-scroll-behavior:smooth;
-}
+        /* ===== BUSCADOR ===== */
 
-/* CARD */
+        .barraLateral form {
+            padding: 10px 16px 12px;
+        }
 
-.card{
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 5px 16px rgba(0,0,0,.06);
-min-height:200px;
-}
+        .barraLateral input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            outline: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+            transition: border-color 0.2s;
+        }
 
-/* SCROLL SIDEBAR */
+        .barraLateral input:focus {
+            border-color: #3b82f6;
+        }
 
-.sidebar::-webkit-scrollbar{
-width:6px;
-}
+        .barraLateral input::placeholder {
+            color: #a0aec0;
+        }
 
-.sidebar::-webkit-scrollbar-thumb{
-background:#4b525a;
-border-radius:10px;
-}
+        .barraLateral hr {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 12px 16px;
+        }
 
-.main-content::-webkit-scrollbar{
-width:8px;
-}
+        /* ===== CONTENIDO ===== */
 
-.main-content::-webkit-scrollbar-thumb{
-background:#cbd5e1;
-border-radius:10px;
-}
+        .contenidoPrincipal {
+            flex-grow: 1;
+            padding: 28px;
+            overflow-y: auto;
+            height: 100%;
+            background: #f5f5f5;
+        }
 
-</style>
+        /* TARJETA */
+
+        .tarjeta {
+            background: white;
+            padding: 28px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            min-height: 200px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* SCROLL */
+
+        .barraLateral::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .barraLateral::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .barraLateral::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .barraLateral::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .contenidoPrincipal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .contenidoPrincipal::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        .contenidoPrincipal::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+
+        .contenidoPrincipal::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
 
 </head>
 
 <body>
 
-@inject('servicioEpisodios', 'App\Services\EpisodioService')
+    @inject('servicioEpisodios', 'App\Services\EpisodioService')
 
-<header class="header">
+    <header class="cabecera">
 
-<div class="usuario">
-Bienvenido, <strong>{{ session('usuario') }}</strong>
-<span>
-(@if (session('is_superuser'))
-Cuenta: Superusuario
-@elseif(session('is_staff'))
-Cuenta: Staff
-@else
-Cuenta: Usuario Normal
-@endif)
-</span>
-</div>
+        <div class="cabeceraIzquierda">
+            <span class="textoLogo">Gestión de Umbrales</span>
+            <div class="infoUsuario">
+                <span class="nombreUsuario">{{ session('usuario') }}</span>
+                <span class="insigniaRol">
+                    @if (session('is_superuser'))
+                        Superusuario
+                    @elseif(session('is_staff'))
+                        Staff
+                    @else
+                        Usuario
+                    @endif
+                </span>
+            </div>
+        </div>
 
-<div class="email">
-<strong>{{ session('email') }}</strong>
-<a href="/cerrarSesion" class="btn-logout">Cerrar Sesión</a>
-</div>
+        <div class="cabeceraDerecha">
+            <span class="textoEmail">{{ session('email') }}</span>
+            <a href="/cerrarSesion" class="botonCerrar">Cerrar Sesión</a>
+        </div>
 
-</header>
+    </header>
 
-<div class="wrapper">
+    <div class="contenedor">
 
-<nav class="sidebar">
+        <nav class="barraLateral">
 
-<div class="sidebar-titulo">Gestión de Episodios</div>
+            <div class="tituloSeccion">Gestión de Episodios</div>
 
-<ul style="list-style:none;padding:0;margin:0;">
+            <ul style="list-style:none;padding:0;margin:0;">
 
-<li>
-<a href="/inicio" class="label-desplegable">Inicio</a>
-</li>
+                <li>
+                    <a href="/inicio" class="enlaceDesplegable">Inicio</a>
+                </li>
 
-<li>
-<a href="{{ route('mapa.global') }}"
-class="label-desplegable {{ request()->routeIs('mapa.global') ? 'active-link' : '' }}">
-Mapa Cuenca del Tajo
-</a>
-</li>
+                <li>
+                    <a href="{{ route('mapa.global') }}"
+                        class="enlaceDesplegable {{ request()->routeIs('mapa.global') ? 'enlaceActivo' : '' }}">
+                        Mapa Cuenca del Tajo
+                    </a>
+                </li>
 
-<form action="{{ route('buscar.global') }}" method="GET">
-<input type="text" name="query" placeholder="Buscador" required>
-</form>
+                <form action="{{ route('buscar.global') }}" method="GET">
+                    <input type="text" name="query" placeholder="Buscador" required>
+                </form>
 
-<hr style="border:0;border-top:1px solid #ccc;margin:10px 15px;">
+                <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:10px 15px;">
 
 
 
-<li>
-<input type="checkbox" id="menu_tajo" class="check-menu">
+                <li>
+                    <input type="checkbox" id="menuTajo" class="checkMenu">
 
-<label for="menu_tajo" class="label-desplegable">
-<span>Cuenca del Tajo (Global)</span>
-<span class="flecha">▶</span>
-</label>
+                    <label for="menuTajo" class="enlaceDesplegable">
+                        <span>Cuenca del Tajo (Global)</span>
+                        <span class="flecha">▶</span>
+                    </label>
 
-<ul class="submenu">
-<li><a href="#">Estado Actual</a></li>
-<li><a href="{{ route('tajo.activos') }}">Episodios Activos</a></li>
-<li><a href="{{ route('tajo.historico') }}">Histórico Episodios</a></li>
-</ul>
-</li>
+                    <ul class="submenu">
+                        <li><a href="#">Estado Actual</a></li>
+                        <li><a href="{{ route('tajo.activos') }}">Episodios Activos</a></li>
+                        <li><a href="{{ route('tajo.historico') }}">Histórico Episodios</a></li>
+                    </ul>
+                </li>
 
-@php
-$comunidades = $servicioEpisodios->obtenerComunidadesConEpisodios();
-@endphp
+                @php
+                    $comunidades = $servicioEpisodios->obtenerComunidadesConEpisodios();
+                @endphp
 
-@foreach ($comunidades as $ccaa)
+                @foreach ($comunidades as $ccaa)
+                    <li>
 
-<li>
+                        <input type="checkbox" id="menuCcaa{{ $ccaa->c_id }}" class="checkMenu">
 
-<input type="checkbox" id="menu_ccaa_{{ $ccaa->c_id }}" class="check-menu">
+                        <label for="menuCcaa{{ $ccaa->c_id }}" class="enlaceDesplegable">
+                            <span>{{ $ccaa->nombre }}</span>
+                            <span class="flecha">▶</span>
+                        </label>
 
-<label for="menu_ccaa_{{ $ccaa->c_id }}" class="label-desplegable">
-<span>{{ $ccaa->nombre }}</span>
-<span class="flecha">▶</span>
-</label>
+                        <ul class="submenu">
+                            <li><a href="#">Estado Actual</a></li>
+                            <li><a href="{{ route('ccaa.activos', $ccaa->c_id) }}">Episodios Activos</a></li>
+                            <li><a href="{{ route('ccaa.historico', $ccaa->c_id) }}">Histórico Episodios</a></li>
+                        </ul>
 
-<ul class="submenu">
-<li><a href="#">Estado Actual</a></li>
-<li><a href="{{ route('ccaa.activos', $ccaa->c_id) }}">Episodios Activos</a></li>
-<li><a href="{{ route('ccaa.historico', $ccaa->c_id) }}">Histórico Episodios</a></li>
-</ul>
+                    </li>
+                @endforeach
+                <div class="tituloSeccion">Situaciones de Emergencia</div>
+                <li>
+                    <a href="{{ route('emergencias.vistaPlan') }}" class="enlaceDesplegable">
+                        <span>Vista Plan Emergencia</span>
+                    </a>
+                </li>
 
-</li>
+                <li>
+                    <a href="{{ route('emergencias.crear') }}" class="enlaceDesplegable">
+                        Formulario Emergencias
+                    </a>
+                </li>
 
-@endforeach
-<div class="sidebar-titulo">Situaciones de Emergencia</div>
-<li>
-<a href="{{ route('emergencias.vistaPlan') }}" class="label-desplegable">
-            <span>Vista Plan Emergencia</span>
-    </a>
-</li>
+                @if (session('is_superuser'))
+                    <div class="tituloSeccion">Configuración</div>
 
-<li>
-    <a href=""></a>
-<a href="{{ route('emergencias.crear') }}" class="label-desplegable">
-Formulario Emergencias
-</a>
-</li>
+                    <li>
+                        <a href="{{ route('confUsuarios') }}" class="enlaceDesplegable">
+                            Gestionar Usuarios
+                        </a>
+                    </li>
+                @endif
 
-@if (session('is_superuser'))
+            </ul>
 
-<div class="sidebar-titulo">Configuración</div>
+        </nav>
 
-<li>
-<a href="{{ route('confUsuarios') }}" class="label-desplegable">
-Gestionar Usuarios
-</a>
-</li>
+        <main class="contenidoPrincipal">
 
-@endif
+            <div class="tarjeta">
 
-</ul>
+                @yield('contenido')
 
-</nav>
+            </div>
 
-<main class="main-content">
+        </main>
 
-<div class="card">
+    </div>
 
-@yield('contenido')
+    @vite(['resources/js/app.js'])
 
-</div>
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
 
-</main>
+            if (window.Echo) {
 
-</div>
+                console.log("Auto carga activada correctamente");
 
-@vite(['resources/js/app.js'])
+                window.Echo.channel('panel-alertas')
+                    .listen('NuevoCambioRecibido', (e) => {
 
-<script type="module">
+                        console.log("Nuevo cambio recibido");
+                        window.location.reload();
 
-document.addEventListener('DOMContentLoaded', () => {
+                    });
 
-if (window.Echo) {
+            }
 
-console.log("Auto carga activada correctamente");
-
-window.Echo.channel('panel-alertas')
-.listen('NuevoCambioRecibido', (e) => {
-
-console.log("Nuevo cambio recibido");
-window.location.reload();
-
-});
-
-}
-
-});
-
-</script>
+        });
+    </script>
 
 </body>
 

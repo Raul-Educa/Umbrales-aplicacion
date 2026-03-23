@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\UmbralesCcaa; // <--- Aquí llamamos al modelo correcto
+use App\Models\UmbralesCcaa;
 
 class SituacionEmergencia extends Model
 {
@@ -15,7 +15,7 @@ class SituacionEmergencia extends Model
 
     protected $fillable = [
         'ccaa_id',
-        'provincia',
+        'provincia_id',
         'nivel',
         'fecha',
         'hora',
@@ -31,7 +31,6 @@ class SituacionEmergencia extends Model
 
     public function ccaa()
     {
-        // Ahora Laravel sabe exactamente qué archivo usar
         return $this->belongsTo(UmbralesCcaa::class, 'ccaa_id', 'c_id');
     }
 }
