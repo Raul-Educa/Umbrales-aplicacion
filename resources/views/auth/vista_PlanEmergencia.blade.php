@@ -3,26 +3,57 @@
 
 
 @section('contenido')
-
     <style>
+        .matriz-container {
+            overflow-x: auto;
+            border: 2px solid #333;
+            margin-top: 20px;
+        }
 
-        .matriz-container { overflow-x: auto; border: 2px solid #333; margin-top: 20px; }
+        .matriz {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 12px;
+            table-layout: fixed;
+        }
 
-        .matriz { border-collapse: collapse; width: 100%; font-family: sans-serif; font-size: 12px; table-layout: fixed; }
-
-        .matriz th, .matriz td { border: 1px solid #ccc; height: 30px; text-align: center; }
-
-
-
-        .fila-ccaa { background: #e9ecef; font-weight: bold; border-top: 2px solid #666; }
-
-        .fila-provincia { background: #fff; }
+        .matriz th,
+        .matriz td {
+            border: 1px solid #ccc;
+            height: 30px;
+            text-align: center;
+        }
 
 
 
-        .col-nombre { width: 220px; text-align: left; padding-left: 10px; position: sticky; left: 0; background: inherit; z-index: 5; border-right: 2px solid #666 !important; }
+        .fila-ccaa {
+            background: #e9ecef;
+            font-weight: bold;
+            border-top: 2px solid #666;
+        }
 
-        .indent { padding-left: 30px !important; color: #444; }
+        .fila-provincia {
+            background: #fff;
+        }
+
+
+
+        .col-nombre {
+            width: 220px;
+            text-align: left;
+            padding-left: 10px;
+            position: sticky;
+            left: 0;
+            background: inherit;
+            z-index: 5;
+            border-right: 2px solid #666 !important;
+        }
+
+        .indent {
+            padding-left: 30px !important;
+            color: #444;
+        }
 
 
 
@@ -30,80 +61,210 @@
 
         :root {
 
-            --n0: #ffffff; /* Normalidad (Sin alerta) */
+            --n0: #ffffff;
+            /* Normalidad (Sin alerta) */
 
-            --n1: #FFFFCC; /* Preemergencia / Alerta */
+            --n1: #eeee7b;
+            /* Preemergencia / Alerta */
 
-            --n2: #FFFF00; /* Situación 0 */
+            --n2: #ffff00;
+            /* Situación 0 */
 
-            --n3: #FFC000; /* Situación 1 */
+            --n3: #ffbf00;
+            /* Situación 1 */
 
-            --n4: #FF0000; /* Situación 2 */
+            --n4: #FF0000;
+            /* Situación 2 */
 
-            --n5: #000000; /* Situación 3 */
+            --n5: #000000;
+            /* Situación 3 */
 
         }
 
 
 
-        .c0 { background-color: var(--n0); }
+        .c0 {
+            background-color: var(--n0);
+        }
 
-        .c1 { background-color: var(--n1); color: #000; }
+        .c1 {
+            background-color: var(--n1);
+            color: #000;
+        }
 
-        .c2 { background-color: var(--n2); color: #000; }
+        .c2 {
+            background-color: var(--n2);
+            color: #000;
+        }
 
-        .c3 { background-color: var(--n3); color: #000; }
+        .c3 {
+            background-color: var(--n3);
+            color: #000;
+        }
 
-        .c4 { background-color: var(--n4); color: #fff; }
+        .c4 {
+            background-color: var(--n4);
+            color: #fff;
+        }
 
-        .c5 { background-color: var(--n5); color: #fff; }
+        .c5 {
+            background-color: var(--n5);
+            color: #fff;
+        }
 
 
 
         /* Efectos Foco y Coordenadas */
 
-        .matriz tbody td { position: relative; }
+        .matriz tbody td {
+            position: relative;
+        }
 
-        .rastro-h::after, .rastro-v::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.15); pointer-events: none; z-index: 5; }
+        .rastro-h::after,
+        .rastro-v::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            z-index: 5;
+        }
 
-        .rastro-h::after { box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.6); }
+        .rastro-h::after {
+            box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.6);
+        }
 
-        .rastro-v::after { box-shadow: inset 2px 0 0 rgba(0, 0, 0, 0.6), inset -2px 0 0 rgba(0, 0, 0, 0.6); }
+        .rastro-v::after {
+            box-shadow: inset 2px 0 0 rgba(0, 0, 0, 0.6), inset -2px 0 0 rgba(0, 0, 0, 0.6);
+        }
 
-        .celda-foco { box-shadow: inset 0 0 0 3px #000 !important; filter: brightness(1.1); z-index: 10 !important; cursor: crosshair; }
+        .celda-foco {
+            box-shadow: inset 0 0 0 3px #000 !important;
+            filter: brightness(1.1);
+            z-index: 10 !important;
+            cursor: crosshair;
+        }
 
-        .header-foco { background-color: #333 !important; color: #fff !important; font-weight: bold; box-shadow: inset 0 0 0 2px #000; transform: scale(1.1); z-index: 10; position: relative; }
+        .header-foco {
+            background-color: #333 !important;
+            color: #fff !important;
+            font-weight: bold;
+            box-shadow: inset 0 0 0 2px #000;
+            transform: scale(1.1);
+            z-index: 10;
+            position: relative;
+        }
 
 
 
         /* Estilos del Modal y Celdas Clicables */
 
-        .celda-click { cursor: pointer !important; }
+        .celda-click {
+            cursor: pointer !important;
+        }
 
-        .celda-click:hover { filter: brightness(0.8) !important; box-shadow: inset 0 0 0 3px #fff !important; }
+        .celda-click:hover {
+            filter: brightness(0.8) !important;
+            box-shadow: inset 0 0 0 3px #fff !important;
+        }
 
-        .modal-oculto { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
+        .modal-oculto {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
 
-        .modal-contenido { background-color: #fefefe; margin: 10% auto; padding: 25px; border: 1px solid #888; width: 450px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-family: sans-serif; }
+        .modal-contenido {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 450px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-family: sans-serif;
+        }
 
-        .cerrar-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .cerrar-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-        .cerrar-modal:hover { color: black; }
+        .cerrar-modal:hover {
+            color: black;
+        }
 
-        .modal-subtitulo { color: #666; font-size: 0.9em; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-subtitulo {
+            color: #666;
+            font-size: 0.9em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
 
-        .modal-caja-desc { background: #f9f9f9; padding: 15px; border-left: 4px solid #333; margin-top: 15px; border-radius: 4px; }
+        .modal-caja-desc {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #333;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
 
-        .btn-pdf { display: inline-block; background-color: #d9534f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .btn-pdf {
+            display: inline-block;
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
 
-        .btn-pdf:hover { background-color: #c9302c; color: white; }
+        .btn-pdf:hover {
+            background-color: #c9302c;
+            color: white;
+        }
 
+        .marcadorCambio::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-top: 10px solid rgba(0, 0, 0, 0.6);
+            border-left: 10px solid transparent;
+            z-index: 2;
+        }
+
+        .cajaDescripcionModal {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #333;
+            margin-top: 15px;
+            border-radius: 4px;
+            max-height: 250px;
+            /* Evita que el modal sea gigante */
+            overflow-y: auto;
+            /* Añade scroll si hay mucho historial */
+        }
     </style>
 
 
 
     <div class="matriz-container">
-
+        {{-- Si se quisiese mostrar aragon, se cambiaria a true --}}
+        @php
+            $mostrarAragon = false;
+        @endphp
         <table class="matriz">
 
             <thead>
@@ -113,9 +274,7 @@
                     <th class="col-nombre" rowspan="2">ZONA / PROVINCIA</th>
 
                     @foreach ($meses as $m)
-
                         <th colspan="{{ $m->daysInMonth }}">{{ strtoupper($m->translatedFormat('F Y')) }}</th>
-
                     @endforeach
 
                 </tr>
@@ -123,13 +282,9 @@
                 <tr>
 
                     @foreach ($meses as $m)
-
                         @for ($d = 1; $d <= $m->daysInMonth; $d++)
-
                             <th>{{ $d }}</th>
-
                         @endfor
-
                     @endforeach
 
                 </tr>
@@ -138,11 +293,13 @@
 
             <tbody>
 
-                @foreach($ccaa as $c)
-
+                @foreach ($ccaa as $c)
                     @php
 
-                        $esSimple = ($c->c_comunidad_autonoma == 'Madrid' || $c->c_comunidad_autonoma == 'Portugal' || $c->c_comunidad_autonoma == 'Ayto. Madrid');
+                        $esSimple =
+                            $c->c_comunidad_autonoma == 'Madrid' ||
+                            $c->c_comunidad_autonoma == 'Portugal' ||
+                            $c->c_comunidad_autonoma == 'Ayto. Madrid';
 
                     @endphp
 
@@ -154,108 +311,75 @@
 
                             {{ strtoupper($c->c_comunidad_autonoma) }}
 
-                            @if($c->plan_emergencia)
-
+                            @if ($c->plan_emergencia)
                                 <span style="color: #000000;">
 
-                                    {{"|  " . $c->plan_emergencia }}
+                                    {{ '|  ' . $c->plan_emergencia }}
 
                                 </span>
-
                             @endif
 
                         </td>
 
-                        @foreach($meses as $m)
-
-                            @for($d=1; $d<=$m->daysInMonth; $d++)
-
+                        @foreach ($meses as $m)
+                            @for ($d = 1; $d <= $m->daysInMonth; $d++)
                                 @php
-
                                     $fecha = $m->copy()->day($d)->format('Y-m-d');
-
                                     $info = $matrizColores[$c->c_id]['global'][$fecha] ?? null;
 
                                     $nivel = $info ? $info['nivel'] : 0;
 
-                                    $clase = ($nivel > 0) ? "c" . $nivel . " celda-click" : "";
+                                    $clase = $info ? 'c' . $nivel . ' celda-click' : '';
 
+                                    if (isset($info['cambio']) && $info['cambio']) {
+                                        $clase .= ' marcadorCambio';
+                                    }
                                 @endphp
 
-                                <td class='{{ $clase }}'
-
-                                    data-fecha="{{ $fecha }}"
-
-                                    data-zona="{{ $c->c_comunidad_autonoma }}"
-
-                                    data-hora="{{ $info['hora'] ?? '' }}"
-
+                                <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
+                                    data-zona="{{ $c->c_comunidad_autonoma }}" data-hora="{{ $info['hora'] ?? '' }}"
                                     data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-
-                                    data-pdf="{{ $info['pdf'] ?? '' }}"
-
-                                    data-nivel="{{ $nivel }}">
-
+                                    data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}">
                                 </td>
-
                             @endfor
-
                         @endforeach
 
                     </tr>
 
 
 
-                    @if(!$esSimple)
-
-                        @foreach($c->provincias as $p)
-
+                    @if (!$esSimple)
+                        @foreach ($c->provincias as $p)
                             <tr class="fila-provincia">
 
                                 <td class="col-nombre indent">{{ $p->p_provincia }}</td>
 
-                                @foreach($meses as $m)
-
-                                    @for($d=1; $d<=$m->daysInMonth; $d++)
-
+                                @foreach ($meses as $m)
+                                    @for ($d = 1; $d <= $m->daysInMonth; $d++)
                                         @php
-
                                             $fecha = $m->copy()->day($d)->format('Y-m-d');
-
                                             $info = $matrizColores[$c->c_id][$p->p_id][$fecha] ?? null;
 
                                             $nivel = $info ? $info['nivel'] : 0;
 
-                                            $clase = ($nivel > 0) ? "c" . $nivel . " celda-click" : "";
+                                            $clase = $info ? 'c' . $nivel . ' celda-click' : '';
 
+                                            if (isset($info['cambio']) && $info['cambio']) {
+                                                $clase .= ' marcadorCambio';
+                                            }
                                         @endphp
 
-                                        <td class='{{ $clase }}'
-
-                                            data-fecha="{{ $fecha }}"
-
-                                            data-zona="{{ $p->p_provincia }}"
-
-                                            data-hora="{{ $info['hora'] ?? '' }}"
-
+                                        <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
+                                            data-zona="{{ $p->p_provincia }}" data-hora="{{ $info['hora'] ?? '' }}"
                                             data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-
-                                            data-pdf="{{ $info['pdf'] ?? '' }}"
-
-                                            data-nivel="{{ $nivel }}">
-
+                                            data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}">
                                         </td>
-
                                     @endfor
-
                                 @endforeach
 
                             </tr>
-
                         @endforeach
-
                     @endif
-
                 @endforeach
 
             </tbody>
@@ -274,7 +398,8 @@
 
             <h2 id="modal-zona">ZONA</h2>
 
-            <p class="modal-subtitulo">Fecha: <span id="modal-fecha"></span> | Hora de la situación: <span id="modal-hora"></span></p>
+            <p class="modal-subtitulo">Fecha: <span id="modal-fecha"></span> | Hora de la situación: <span
+                    id="modal-hora"></span></p>
 
 
 
@@ -292,7 +417,7 @@
 
                 <a id="btn-descargar-pdf" href="#" target="_blank" class="btn-pdf">
 
-                     Ver / Descargar Documento Oficial
+                    Ver / Descargar Documento Oficial
 
                 </a>
 
@@ -305,7 +430,6 @@
 
 
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
 
             const tabla = document.querySelector('.matriz');
@@ -328,11 +452,12 @@
 
 
 
-                    document.querySelectorAll('.rastro-h, .rastro-v, .celda-foco, .header-foco').forEach(el => {
+                    document.querySelectorAll('.rastro-h, .rastro-v, .celda-foco, .header-foco').forEach(
+                        el => {
 
-                        el.classList.remove('rastro-h', 'rastro-v', 'celda-foco', 'header-foco');
+                            el.classList.remove('rastro-h', 'rastro-v', 'celda-foco', 'header-foco');
 
-                    });
+                        });
 
 
 
@@ -394,49 +519,28 @@
 
 
 
-            // Lógica del Modal al hacer clic en celdas coloreadas
+           document.addEventListener('click', function(e) {
+                // Usamos closest() para atrapar el clic aunque el usuario pinche en el borde o en el triangulito negro
+                const td = e.target.closest('.celda-click');
 
-            document.addEventListener('click', function(e) {
-
-                if (e.target.classList.contains('celda-click')) {
-
-                    const td = e.target;
-
-
-
+                if (td) {
                     document.getElementById('modal-zona').innerText = td.dataset.zona;
-
                     document.getElementById('modal-fecha').innerText = td.dataset.fecha;
-
                     document.getElementById('modal-hora').innerText = td.dataset.hora || '--:--';
-
-document.getElementById('modal-desc').innerHTML = td.dataset.desc;
-
+                    document.getElementById('modal-desc').innerHTML = td.dataset.desc;
 
                     const btnPdf = document.getElementById('btn-descargar-pdf');
-
                     const cajaPdf = document.getElementById('modal-caja-pdf');
 
-
-
                     if (td.dataset.pdf) {
-
                         btnPdf.href = '/storage/' + td.dataset.pdf;
-
                         cajaPdf.style.display = 'block';
-
                     } else {
-
                         cajaPdf.style.display = 'none';
-
                     }
 
-
-
                     document.getElementById('modalDetalles').style.display = 'block';
-
                 }
-
             });
 
         });
@@ -460,7 +564,5 @@ document.getElementById('modal-desc').innerHTML = td.dataset.desc;
             }
 
         }
-
     </script>
-
 @endsection

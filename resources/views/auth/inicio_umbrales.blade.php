@@ -2,48 +2,48 @@
 
 @section('contenido')
     <style>
-        .tabla-hidro { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .tabla-hidro th { text-align: left; padding: 12px; border-bottom: 2px solid #dee2e6; color: #555; font-size: 0.85rem; }
-        .tabla-hidro td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+        .tablaHidro { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .tablaHidro th { text-align: left; padding: 12px; border-bottom: 2px solid #dee2e6; color: #555; font-size: 0.85rem; }
+        .tablaHidro td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
 
-        .fila-alerta-3 { background-color: rgba(255, 0, 0, 0.15) !important; font-weight: bold; }
-        .fila-alerta-2 { background-color: rgba(255, 140, 0, 0.15) !important; }
-        .fila-alerta-1 { background-color: rgba(255, 215, 0, 0.15) !important; }
+        .filaAlerta3 { background-color: rgba(255, 0, 0, 0.15) !important; font-weight: bold; }
+        .filaAlerta2 { background-color: rgba(255, 140, 0, 0.15) !important; }
+        .filaAlerta1 { background-color: rgba(255, 215, 0, 0.15) !important; }
 
-        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .dot-3 { background-color: red; box-shadow: 0 0 5px red; }
-        .dot-2 { background-color: orange; }
-        .dot-1 { background-color: gold; }
-        .dot-0 { background-color: #bbb; }
+        .puntEstado { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .punt3 { background-color: red; box-shadow: 0 0 5px red; }
+        .punt2 { background-color: orange; }
+        .punt1 { background-color: gold; }
+        .punt0 { background-color: #bbb; }
 
-        .pill-global { background-color: #455a64; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
-        .val-box { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: #333; }
+        .etiquetaGlobal { background-color: #455a64; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+        .cajaValor { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: #333; }
 
-        .grafico-fila { background: rgba(255, 255, 255, 0.5); border-radius: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .grafico-fila:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .filaGrafico { background: rgba(255, 255, 255, 0.5); border-radius: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .filaGrafico:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
 
-        .tabs-container { margin-bottom: 20px; border-bottom: 2px solid #dee2e6; display: flex; gap: 10px; margin-top: 20px; }
-        .tab-btn { padding: 10px 20px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; border-radius: 8px 8px 0 0; color: #666; transition: 0.3s; }
-        .tab-btn.active { background: #0d6efd; color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .contenedorPestanas { margin-bottom: 20px; border-bottom: 2px solid #dee2e6; display: flex; gap: 10px; margin-top: 20px; }
+        .botonPestana { padding: 10px 20px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; border-radius: 8px 8px 0 0; color: #666; transition: 0.3s; }
+        .botonPestana.activo { background: #0d6efd; color: white; }
+        .contenidoPestana { display: none; }
+        .contenidoPestana.activo { display: block; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 900px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); position: relative; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .capaModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .contenidoModal { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 900px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); position: relative; }
+        .cabeceraModal { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
 
-        .btn-close { background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; }
-        .btn-close:hover { background: #dc2626; }
+        .botonCerrar { background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; }
+        .botonCerrar:hover { background: #dc2626; }
 
         /* Botones de Filtro de Tiempo */
-        .filtros-tiempo-grafico { padding: 10px 20px; background: #f8f9fa; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-filtro-tiempo { background: white; border: 1px solid #ced4da; padding: 4px 14px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #495057; }
-        .btn-filtro-tiempo:hover { background: #e9ecef; }
-        .btn-filtro-tiempo.active { background: #0d6efd; color: white; border-color: #0d6efd; }
+        .filtrosTiempoGrafico { padding: 10px 20px; background: #f8f9fa; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .botonFiltroTiempo { background: white; border: 1px solid #ced4da; padding: 4px 14px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #495057; }
+        .botonFiltroTiempo:hover { background: #e9ecef; }
+        .botonFiltroTiempo.activo { background: #0d6efd; color: white; border-color: #0d6efd; }
 
         /* --- ESTILOS PARA EL BOCADILLO (TOOLTIP) --- */
-        .icono-info { position: relative; display: inline-block; cursor: help; color: #0d6efd; margin-left: 5px; font-weight: bold; font-size: 0.85rem; background: #e9ecef; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; }
-        .icono-info .bocadillo-texto {
+        .iconoInfo { position: relative; display: inline-block; cursor: help; color: #0d6efd; margin-left: 5px; font-weight: bold; font-size: 0.85rem; background: #e9ecef; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; }
+        .iconoInfo .bocadilloTexto {
             visibility: hidden;
             width: 260px; /* <--- Ancho ampliado para que quepa bien la opción 1 */
             background-color: #333;
@@ -51,8 +51,8 @@
             position: absolute; z-index: 100; bottom: 130%; left: 50%; transform: translateX(-50%);
             opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; font-weight: normal; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .icono-info .bocadillo-texto::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #333 transparent transparent transparent; }
-        .icono-info:hover .bocadillo-texto { visibility: visible; opacity: 1; }
+        .iconoInfo .bocadilloTexto::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #333 transparent transparent transparent; }
+        .iconoInfo:hover .bocadilloTexto { visibility: visible; opacity: 1; }
     </style>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -61,45 +61,45 @@
         </div>
 
         <div>
-            <span class="pill-global">{{ count($aforos) + count($embalses) }} Estaciones en Alerta</span>
+            <span class="etiquetaGlobal">{{ count($aforos) + count($embalses) }} Estaciones en Alerta</span>
             <small style="color: #666; margin-left: 10px;">Última actualización: {{ now()->format('H:i') }}</small>
         </div>
     </div>
 
-    <div class="tabs-container">
-        <button class="tab-btn active" onclick="openTab(event, 'tab-aforos')">Aforos en Río ({{ count($aforos) }})</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-embalses')">Embalses ({{ count($embalses) }})</button>
+    <div class="contenedorPestanas">
+        <button class="botonPestana activo" onclick="abrirPestana(event, 'pestanaAforos')">Aforos en Río ({{ count($aforos) }})</button>
+        <button class="botonPestana" onclick="abrirPestana(event, 'pestanaEmbalses')">Embalses ({{ count($embalses) }})</button>
     </div>
 
     {{-- CONTENIDO AFOROS --}}
-    <div id="tab-aforos" class="tab-content active">
+    <div id="pestanaAforos" class="contenidoPestana activo">
         @include('auth.tabla_inicio', ['estaciones' => $aforos, 'label_acc' => 'Caudal'])
     </div>
 
     {{-- CONTENIDO EMBALSES --}}
-    <div id="tab-embalses" class="tab-content">
+    <div id="pestanaEmbalses" class="contenidoPestana">
         @include('auth.tabla_inicio', ['estaciones' => $embalses, 'label_acc' => 'Volumen'])
     </div>
 
     {{-- MODAL DEL GRÁFICO (Con barra de filtros) --}}
-    <div id="graficoModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle" style="margin: 0; color: #333;">Detalle de Estación</h3>
-                <button id="closeModal" class="btn-close">X</button>
+    <div id="graficoModal" class="capaModal">
+        <div class="contenidoModal">
+            <div class="cabeceraModal">
+                <h3 id="tituloModal" style="margin: 0; color: #333;">Detalle de Estación</h3>
+                <button id="cerrarModal" class="botonCerrar">X</button>
             </div>
 
-            <div class="filtros-tiempo-grafico">
+            <div class="filtrosTiempoGrafico">
                 <span style="font-size: 0.85rem; color: #666; font-weight: bold;">Rango:</span>
-                <button class="btn-filtro-tiempo" data-dias="1">1 Día</button>
-                <button class="btn-filtro-tiempo active" data-dias="7">7 Días</button>
-                <button class="btn-filtro-tiempo" data-dias="10">10 Días</button>
-                <button class="btn-filtro-tiempo" data-dias="30">30 Días</button>
-                <button class="btn-filtro-tiempo" data-dias="all">Histórico</button>
+                <button class="botonFiltroTiempo" data-dias="1">1 Día</button>
+                <button class="botonFiltroTiempo activo" data-dias="7">7 Días</button>
+                <button class="botonFiltroTiempo" data-dias="10">10 Días</button>
+                <button class="botonFiltroTiempo" data-dias="30">30 Días</button>
+                <button class="botonFiltroTiempo" data-dias="all">Histórico</button>
             </div>
 
-            <div class="modal-body">
-                <div id="chartDetalle" style="min-height: 300px; display: flex; align-items: center; justify-content: center; color: #666;">
+            <div class="cuerpoModal">
+                <div id="graficoDetalle" style="min-height: 300px; display: flex; align-items: center; justify-content: center; color: #666;">
                     Cargando datos detallados...
                 </div>
             </div>
@@ -109,38 +109,38 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         // FUNCIÓN PARA LAS PESTAÑAS
-        function openTab(evt, tabName) {
-            let i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
+        function abrirPestana(evt, nombrePestana) {
+            let i, contenidoPestana, enlacesPestana;
+            contenidoPestana = document.getElementsByClassName("contenidoPestana");
+            for (i = 0; i < contenidoPestana.length; i++) {
+                contenidoPestana[i].style.display = "none";
+                contenidoPestana[i].classList.remove("activo");
             }
-            tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
+            enlacesPestana = document.getElementsByClassName("botonPestana");
+            for (i = 0; i < enlacesPestana.length; i++) {
+                enlacesPestana[i].classList.remove("activo");
             }
-            document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+            document.getElementById(nombrePestana).style.display = "block";
+            document.getElementById(nombrePestana).classList.add("activo");
+            evt.currentTarget.classList.add("activo");
 
             // Fuerza a redibujar los gráficos para evitar problemas de tamaño oculto
             setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);
         }
 
         // VARIABLES Y LÓGICA DE GRÁFICOS
-        let chartAmpliado = null;
+        let graficoAmpliado = null;
         let estacionActivaModal = null;
         window.datosEstacionesCache = {};
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const contenedores = document.querySelectorAll('.grafico-fila');
+            const contenedores = document.querySelectorAll('.filaGrafico');
             const modal = document.getElementById('graficoModal');
-            const closeModal = document.getElementById('closeModal');
-            const botonesFiltro = document.querySelectorAll('.btn-filtro-tiempo');
+            const cerrarModal = document.getElementById('cerrarModal');
+            const botonesFiltro = document.querySelectorAll('.botonFiltroTiempo');
 
             // Cerrar modal
-            closeModal.addEventListener('click', () => modal.style.display = 'none');
+            cerrarModal.addEventListener('click', () => modal.style.display = 'none');
             window.addEventListener('click', (e) => {
                 if (e.target === modal) modal.style.display = 'none';
             });
@@ -149,8 +149,8 @@
             botonesFiltro.forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (!estacionActivaModal) return;
-                    botonesFiltro.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+                    botonesFiltro.forEach(b => b.classList.remove('activo'));
+                    this.classList.add('activo');
                     const dias = this.dataset.dias;
                     cargarGraficoGrande(estacionActivaModal, dias);
                 });
@@ -209,47 +209,47 @@
         function abrirModalGigante(codigo) {
             const modal = document.getElementById('graficoModal');
             modal.style.display = 'flex';
-            document.getElementById('modalTitle').innerText = `Historial Completo: Estación ${codigo}`;
+            document.getElementById('tituloModal').innerText = `Historial Completo: Estación ${codigo}`;
 
             estacionActivaModal = codigo;
 
-            document.querySelectorAll('.btn-filtro-tiempo').forEach(b => b.classList.remove('active'));
-            document.querySelector('.btn-filtro-tiempo[data-dias="7"]').classList.add('active');
+            document.querySelectorAll('.botonFiltroTiempo').forEach(b => b.classList.remove('activo'));
+            document.querySelector('.botonFiltroTiempo[data-dias="7"]').classList.add('activo');
 
             cargarGraficoGrande(codigo, '7');
         }
 
         async function cargarGraficoGrande(codigo, dias) {
-            const chartContenedor = document.getElementById('chartDetalle');
+            const contenedorGrafico = document.getElementById('graficoDetalle');
 
-            if (chartAmpliado) {
-                chartAmpliado.destroy();
-                chartAmpliado = null;
+            if (graficoAmpliado) {
+                graficoAmpliado.destroy();
+                graficoAmpliado = null;
             }
 
-            chartContenedor.style.width = '100%';
-            chartContenedor.style.minHeight = '350px';
-            chartContenedor.innerHTML = '<span style="color:#666;">Cargando datos detallados...</span>';
+            contenedorGrafico.style.width = '100%';
+            contenedorGrafico.style.minHeight = '350px';
+            contenedorGrafico.innerHTML = '<span style="color:#666;">Cargando datos detallados...</span>';
 
             try {
-                const cacheKey = `${codigo}_${dias}`;
+                const claveCache = `${codigo}_${dias}`;
                 let json;
 
-                if (window.datosEstacionesCache[cacheKey]) {
-                    json = window.datosEstacionesCache[cacheKey];
+                if (window.datosEstacionesCache[claveCache]) {
+                    json = window.datosEstacionesCache[claveCache];
                 } else {
                     const url = `{{ url('/api/historial') }}/${codigo}?dias=${dias}`;
                     const res = await fetch(url);
                     json = await res.json();
-                    window.datosEstacionesCache[cacheKey] = json;
+                    window.datosEstacionesCache[claveCache] = json;
                 }
 
                 if (!json || !json.fechas || json.fechas.length === 0) {
-                    chartContenedor.innerHTML = '<span style="color:red">No hay datos para este rango de tiempo.</span>';
+                    contenedorGrafico.innerHTML = '<span style="color:red">No hay datos para este rango de tiempo.</span>';
                     return;
                 }
 
-                chartContenedor.innerHTML = '';
+                contenedorGrafico.innerHTML = '';
 
                 const datosMapeados = json.fechas.map((f, i) => {
                     let timestamp;
@@ -289,7 +289,7 @@
                     });
                 }
 
-                const options = {
+                const opciones = {
                     chart: { type: 'area', height: 350, animations: { enabled: false }, zoom: { enabled: true } },
                     series: [{ name: 'Valor Registrado', data: datosMapeados }],
                     annotations: { yaxis: zonasUmbrales },
@@ -310,11 +310,11 @@
                     grid: { borderColor: '#f1f1f1', xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } }
                 };
 
-                chartAmpliado = new ApexCharts(chartContenedor, options);
-                chartAmpliado.render();
+                graficoAmpliado = new ApexCharts(contenedorGrafico, opciones);
+                graficoAmpliado.render();
 
             } catch (err) {
-                chartContenedor.innerHTML = '<span style="color:red">Error al cargar la gráfica.</span>';
+                contenedorGrafico.innerHTML = '<span style="color:red">Error al cargar la gráfica.</span>';
             }
         }
     </script>

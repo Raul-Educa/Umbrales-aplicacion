@@ -25,7 +25,7 @@
             margin: 0;
         }
 
-        .login-card {
+        .tarjetaLogin {
             background: white;
             padding: 2.5rem;
             border-radius: 1rem;
@@ -34,23 +34,23 @@
             max-width: 400px;
         }
 
-        .header {
+        .cabecera {
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        .header h1 {
+        .cabecera h1 {
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
-        .header p {
+        .cabecera p {
             color: #64748b;
             font-size: 0.875rem;
         }
 
-        .form-group {
+        .grupoFormulario {
             margin-bottom: 1.25rem;
         }
 
@@ -77,7 +77,7 @@
             ring: 2px solid var(--primary);
         }
 
-        .btn {
+        .boton {
             background: var(--primary);
             color: white;
             border: none;
@@ -90,11 +90,11 @@
             font-size: 1rem;
         }
 
-        .btn:hover {
+        .boton:hover {
             background: var(--primary-hover);
         }
 
-        .error-message {
+        .mensajeError {
             color: #dc2626;
             font-size: 0.75rem;
             margin-top: 0.25rem;
@@ -104,30 +104,30 @@
 
 <body>
 {{-- Logica de inicio de sesión --}}
-    <div class="login-card">
-        <div class="header">
+    <div class="tarjetaLogin">
+        <div class="cabecera">
             <h1>Acceso al Sistema de Umbrales</h1>
 
         </div>
 
         <form action="/login" method="POST">
-            @csrf <div class="form-group">
+            @csrf <div class="grupoFormulario">
                 <label for="username">Nombre de Usuario</label>
                 <input type="text" id="username" name="username" value="{{ old('username') }}" required autofocus>
                 @error('username')
-                    <div class="error-message">{{ $message }}</div>
+                    <div class="mensajeError">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="grupoFormulario">
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" name="password" required>
                 @error('password')
-                    <div class="error-message">{{ $message }}</div>
+                    <div class="mensajeError">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button type="submit" class="btn">Entrar al Sistema</button>
+            <button type="submit" class="boton">Entrar al Sistema</button>
         </form>
     </div>
 
