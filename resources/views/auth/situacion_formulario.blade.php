@@ -111,7 +111,7 @@
                     <label class="tarjetaRadio">
                         <input type="radio" name="tipo_documento" value="texto_correo" onchange="toggleDoc()">
                         <div class="contenidoRadio">
-                            <strong>Texto de correo</strong>
+                            <strong>Generar PDF automáticamente</strong>
                             <span>Copiar contenido del email recibido</span>
                         </div>
                     </label>

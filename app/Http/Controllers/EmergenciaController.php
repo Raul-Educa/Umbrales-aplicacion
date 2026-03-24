@@ -8,7 +8,6 @@ use App\Models\UmbralesCcaa;
 use App\Models\UmbralesProvincia;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EmergenciaController extends Controller
@@ -25,14 +24,16 @@ class EmergenciaController extends Controller
         return view('auth.situacion_formulario', compact('ccaaParaFormulario', 'provinciasParaFormulario'));
     }
 
-    public function guardar(Request $request)
+   public function guardar(Request $request)
     {
         $request->validate([
             'ccaa_id' => 'required|exists:umbrales_ccaa,c_id',
             'nivel' => 'required|integer|min:0|max:5',
             'fecha' => 'required|date|before_or_equal:today',
             'hora' => 'required',
-            'tipo_documento' => 'required|in:pdf_oficial,texto_correo'
+            'tipo_documento' => 'required|in:pdf_oficial,texto_correo',
+            'texto_correo' => 'required_if:tipo_documento,texto_correo',
+            'archivo_pdf' => 'required_if:tipo_documento,pdf_oficial'
         ], [
             'fecha.before_or_equal' => 'Error: La fecha de la emergencia no puede ser futura',
             'texto_correo.required_if' => 'Error: Debes pegar el contenido del correo para generar el PDF.',
@@ -48,6 +49,39 @@ class EmergenciaController extends Controller
                 ->withErrors(['hora' => 'Error: La hora de la emergencia no puede ser futura']);
         }
 
+        // =====================================================================
+        // 1. CALCULAMOS LAS PROVINCIAS AFECTADAS ANTES DE HACER EL PDF
+        // =====================================================================
+        $provinciasIds = $request->input('provincias_ids', []);
+        $tieneProvincias = UmbralesProvincia::where('c_id', $request->ccaa_id)->exists();
+
+        if ($tieneProvincias && empty($provinciasIds)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['provincias_ids' => 'Debe marcar al menos una provincia o seleccionar todas.']);
+        }
+
+        $textoProvincias = "";
+
+        if (!$tieneProvincias) {
+            $provinciasIds = [null];
+            $textoProvincias = "Toda la Comunidad Autónoma"; // Caso Madrid, que no tiene provincias
+        } else {
+            $provinciasDeLaCcaa = UmbralesProvincia::where('c_id', $request->ccaa_id)->get();
+
+            // Si el número de provincias marcadas es igual al total de provincias de esa CCAA...
+            if (count($provinciasIds) == $provinciasDeLaCcaa->count()) {
+                $textoProvincias = "Todas las provincias (Afectación a nivel autonómico)";
+            } else {
+                // Si solo son algunas, sacamos sus nombres y los separamos por comas
+                $nombresProvincias = $provinciasDeLaCcaa->whereIn('p_id', $provinciasIds)->pluck('p_provincia')->toArray();
+                $textoProvincias = implode(', ', $nombresProvincias);
+            }
+        }
+
+        // =====================================================================
+        // 2. GESTIÓN DEL PDF (Ahora le pasamos la variable 'provincias')
+        // =====================================================================
         $rutaPdf = null;
 
         if ($request->tipo_documento == 'pdf_oficial' && $request->hasFile('archivo_pdf')) {
@@ -58,10 +92,11 @@ class EmergenciaController extends Controller
 
         if ($request->tipo_documento == 'texto_correo' && $request->filled('texto_correo')) {
             $pdfCorreo = Pdf::loadView('auth.plantilla_pdf', [
-                'texto' => $request->texto_correo,
-                'fecha' => $request->fecha,
-                'hora'  => $request->hora,
-                'ccaa'  => UmbralesCcaa::find($request->ccaa_id)->c_comunidad_autonoma
+                'texto'      => $request->texto_correo,
+                'fecha'      => $request->fecha,
+                'hora'       => $request->hora,
+                'ccaa'       => UmbralesCcaa::find($request->ccaa_id)->c_comunidad_autonoma,
+                'provincias' => $textoProvincias // <-- ¡LA NUEVA VARIABLE!
             ]);
 
             $nombrePdf = time() . '_generado_correo.pdf';
@@ -69,20 +104,9 @@ class EmergenciaController extends Controller
             $rutaPdf = 'pdf_emergencia/' . $nombrePdf;
         }
 
-        $provinciasIds = $request->input('provincias_ids', []);
-        $tieneProvincias = UmbralesProvincia::where('c_id', $request->ccaa_id)->exists();
-
-        if ($tieneProvincias && empty($provinciasIds)) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['provincias_ids' => 'Debe marcar al menos una provincia o seleccionar todas.']);
-        }
-
-        if (!$tieneProvincias) {
-            $provinciasIds = [null];
-        }
-
-
+        // =====================================================================
+        // 3. GUARDAMOS EN LA BASE DE DATOS
+        // =====================================================================
         DB::transaction(function () use ($request, $rutaPdf, $provinciasIds) {
             foreach ($provinciasIds as $provId) {
                 SituacionEmergencia::create([
@@ -172,8 +196,7 @@ class EmergenciaController extends Controller
                                     $historialDia .= "<b>00:00h - " . $nombreNivel . "</b> <span style='color:#666; font-size:0.85em;'><i>(Inicio: " . $fechaOriginal . " a las " . $horaOriginal . "h)</i></span><br>" . $textoDesc . "<br>";
 
                                     if ($estadoAnterior->ruta_pdf) {
-                                        $historialDia .= "<a href='/storage/".$estadoAnterior->ruta_pdf."' target='_blank' style='color:#d9534f; font-size:0.85em; text-decoration:none;'>Ver/Descargar PDF</a><br>";
-                                    }
+$historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>📄 Ver / Descargar PDF</a><br>";                                    }
                                     $historialDia .= "<hr style='border-top:1px dashed #ccc; margin: 10px 0;'>";
                                 }
 
@@ -187,8 +210,7 @@ class EmergenciaController extends Controller
                                     $historialDia .= "<b>" . \Carbon\Carbon::parse($evento->hora)->format('H:i') . "h - " . $nombreNivel . "</b><br>" . $textoDesc . "<br>";
 
                                     if ($evento->ruta_pdf) {
-                                        $historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style='color:#d9534f; font-size:0.85em; text-decoration:none;'>Ver/Descargar PDF</a><br>";
-                                    }
+$historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>Ver / Descargar PDF</a><br>";                                    }
                                     $historialDia .= "<br>";
                                 }
 
