@@ -24,7 +24,7 @@ class EmergenciaController extends Controller
         return view('auth.situacion_formulario', compact('ccaaParaFormulario', 'provinciasParaFormulario'));
     }
 
-   public function guardar(Request $request)
+    public function guardar(Request $request)
     {
         $request->validate([
             'ccaa_id' => 'required|exists:umbrales_ccaa,c_id',
@@ -140,8 +140,12 @@ class EmergenciaController extends Controller
         $registros = \App\Models\SituacionEmergencia::orderBy('fecha', 'asc')->orderBy('hora', 'asc')->get();
 
         $nombresNiveles = [
-            0 => 'Normalidad', 1 => 'Preemergencia', 2 => 'Situación 0',
-            3 => 'Situación 1', 4 => 'Situación 2', 5 => 'Situación 3'
+            0 => 'Normalidad',
+            1 => 'Preemergencia',
+            2 => 'Situación 0',
+            3 => 'Situación 1',
+            4 => 'Situación 2',
+            5 => 'Situación 3'
         ];
 
         $matrizColores = [];
@@ -162,14 +166,14 @@ class EmergenciaController extends Controller
 
                     foreach ($zonas as $zonaId) {
 
-                        $historialPrevio = $registrosCcaa->filter(function($registro) use ($fecha, $zonaId) {
+                        $historialPrevio = $registrosCcaa->filter(function ($registro) use ($fecha, $zonaId) {
                             $fechaRegistro = substr((string)$registro->fecha, 0, 10);
                             return $registro->provincia_id == $zonaId && $fechaRegistro < $fecha;
                         })->sortByDesc('fecha')->sortByDesc('hora');
 
                         $estadoAnterior = $historialPrevio->first();
 
-                        $eventosHoy = $registrosCcaa->filter(function($registro) use ($fecha, $zonaId) {
+                        $eventosHoy = $registrosCcaa->filter(function ($registro) use ($fecha, $zonaId) {
                             $fechaRegistro = substr((string)$registro->fecha, 0, 10);
                             return $registro->provincia_id == $zonaId && $fechaRegistro == $fecha;
                         })->sortBy('hora');
@@ -193,10 +197,11 @@ class EmergenciaController extends Controller
                                     $fechaOriginal = \Carbon\Carbon::parse($estadoAnterior->fecha)->format('d/m/Y');
                                     $horaOriginal = \Carbon\Carbon::parse($estadoAnterior->hora)->format('H:i');
 
-                                    $historialDia .= "<b>00:00h - " . $nombreNivel . "</b> <span style='color:#666; font-size:0.85em;'><i>(Inicio: " . $fechaOriginal . " a las " . $horaOriginal . "h)</i></span><br>" . $textoDesc . "<br>";
+                                    $historialDia .= "<b>" . $nombreNivel . "</b> <span><i>Inicio: " . $fechaOriginal . " (" . $horaOriginal . ")</i></span><br>" . $textoDesc . "<br>";
 
                                     if ($estadoAnterior->ruta_pdf) {
-$historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>📄 Ver / Descargar PDF</a><br>";                                    }
+                                        $historialDia .= "<a href='/storage/" . $estadoAnterior->ruta_pdf . "' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>Ver / Descargar PDF {$fechaOriginal}</a><br>";
+                                    }
                                     $historialDia .= "<hr style='border-top:1px dashed #ccc; margin: 10px 0;'>";
                                 }
 
@@ -210,10 +215,10 @@ $historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style
                                     $historialDia .= "<b>" . \Carbon\Carbon::parse($evento->hora)->format('H:i') . "h - " . $nombreNivel . "</b><br>" . $textoDesc . "<br>";
 
                                     if ($evento->ruta_pdf) {
-$historialDia .= "<a href='/storage/".$evento->ruta_pdf."' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>Ver / Descargar PDF</a><br>";                                    }
+                                        $historialDia .= "<a href='/storage/" . $evento->ruta_pdf . "' target='_blank' style='display:inline-block; margin-top:6px; padding:6px 12px; border:1px solid #d9534f; border-radius:5px; background-color:#fef2f2; color:#d9534f; font-size:0.85em; font-weight:bold; text-decoration:none;'>Ver / Descargar PDF</a><br>";
+                                    }
                                     $historialDia .= "<br>";
                                 }
-
                             } else {
                                 $fechaOriginal = \Carbon\Carbon::parse($estadoAnterior->fecha)->format('d/m/Y');
                                 $horaOriginal = \Carbon\Carbon::parse($estadoAnterior->hora)->format('H:i');

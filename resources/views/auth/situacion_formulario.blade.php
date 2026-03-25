@@ -131,7 +131,7 @@
             </section>
 
             <div class="grupoFormulario completo">
-                <label>Descripción / Observaciones</label>
+                <label>Descripción corta</label>
                 <textarea name="descripcion" rows="3" placeholder="Descripcion..."></textarea>
             </div>
 

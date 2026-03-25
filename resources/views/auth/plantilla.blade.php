@@ -85,6 +85,8 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            padding-left: 24px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .textoEmail {
