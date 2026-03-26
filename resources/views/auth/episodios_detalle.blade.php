@@ -148,7 +148,6 @@
             background: #5a6268;
         }
 
-        /* Estilos sutiles para los botones de admin */
         .btn-admin-ghost {
             background: transparent;
             border: 1px solid #ced4da;
@@ -174,7 +173,6 @@
         .btn-admin-ghost.danger:hover {
             background: #fff5f5;
         }
-        /* Botones para el filtro de días del gráfico gigante */
         .filtros-tiempo-grafico {
             padding: 10px 20px;
             background: #f8f9fa;
@@ -207,13 +205,11 @@
 
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
 
-        {{-- SECCIÓN IZQUIERDA: Título, Volver y Controles Admin --}}
         <div>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <a href="javascript:history.back()" class="btn-volver">← Volver</a>
                 <h2 style="margin: 0;">{{ $titulo }}</h2>
 
-                {{-- BOTONES DE SUPERUSUARIO LADO A LADO CON EL TÍTULO --}}
                 @if (session('is_superuser'))
                     <div style="display: flex; gap: 8px; margin-left: 10px;">
                         <button onclick="configuracionAdmin('admin-form-renombrar')" class="btn-admin-ghost">
@@ -395,10 +391,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        // Variables globales para controlar el gráfico grande sin tocar los pequeños
+        // Variables para el grafico grande y guardar en caché
         let chartAmpliado = null;
         let estacionActivaModal = null;
-        window.datosEstacionesCache = {}; // Guardamos en memoria para no saturar la base de datos
+        window.datosEstacionesCache = {};
 
         document.addEventListener('DOMContentLoaded', async () => {
             const contenedores = document.querySelectorAll('.grafico-fila');
@@ -406,43 +402,39 @@
             const closeModal = document.getElementById('closeModal');
             const botonesFiltro = document.querySelectorAll('.btn-filtro-tiempo');
 
-            // --- 1. LÓGICA PARA CERRAR LA VENTANA GIGANTE ---
+            //Cerrar el grafico
             closeModal.addEventListener('click', () => modal.style.display = 'none');
             window.addEventListener('click', (e) => {
                 if (e.target === modal) modal.style.display = 'none';
             });
 
-            // --- 2. LÓGICA DE LOS BOTONES DE TIEMPO (Solo afectan al gráfico grande) ---
+
             botonesFiltro.forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (!estacionActivaModal) return;
 
-                    // Cambiamos el color del botón activo
+                    // Cambiar el estado activo del botón
                     botonesFiltro.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
 
-                    // Pedimos que se vuelva a pintar SOLO el gráfico grande con los nuevos días
                     const dias = this.dataset.dias;
                     cargarGraficoGrande(estacionActivaModal, dias);
                 });
             });
 
-            // --- 3. PINTAR LOS GRÁFICOS PEQUEÑOS DE LA TABLA (Siempre a 7 días) ---
             for (const div of contenedores) {
                 const codigo = div.dataset.codigo;
                 if (!codigo || codigo === '---') continue;
 
                 try {
-                    // Pedimos siempre 7 días para la tabla
+                    // Pide 7 dias
                     const url = `{{ url('/api/historial') }}/${codigo}?dias=7`;
                     const res = await fetch(url);
                     const json = await res.json();
 
                     if (json.valores && json.valores.length > 0) {
-                        // Guardamos esta petición inicial en caché por si el usuario abre el modal
                         window.datosEstacionesCache[`${codigo}_7`] = json;
 
-                        // Comprimimos los puntos para que el mini gráfico cargue al instante
                         const maxPuntos = 40;
                         let valoresMedios = [];
                         if (json.valores.length > maxPuntos) {
@@ -461,7 +453,6 @@
                             valoresMedios = json.valores;
                         }
 
-                        // Pintamos el mini gráfico
                         div.innerHTML = '';
                         new ApexCharts(div, {
                             chart: { type: 'area', height: 40, sparkline: { enabled: true }, animations: { enabled: false } },
@@ -482,7 +473,6 @@
             }
         });
 
-        // --- 4. FUNCIÓN PARA ABRIR EL MODAL ---
         function abrirModalGigante(codigo) {
             const modal = document.getElementById('graficoModal');
             modal.style.display = 'flex';
@@ -490,19 +480,17 @@
 
             estacionActivaModal = codigo;
 
-            // Al abrir, forzamos que el botón seleccionado sea el de "7 Días" por defecto
             document.querySelectorAll('.btn-filtro-tiempo').forEach(b => b.classList.remove('active'));
             document.querySelector('.btn-filtro-tiempo[data-dias="7"]').classList.add('active');
 
-            // Llamamos a pintar el gráfico grande
             cargarGraficoGrande(codigo, '7');
         }
 
-        // --- 5. FUNCIÓN QUE PINTA SOLO EL GRÁFICO GIGANTE ---
+// Logica para cargar el gáfico grande
         async function cargarGraficoGrande(codigo, dias) {
             const chartContenedor = document.getElementById('chartDetalle');
 
-            // Si ya había un gráfico gigante abierto, lo borramos para pintar el nuevo
+            // Si ya había un gráfico grande abierto, lo borramos para pintar el nuevo
             if (chartAmpliado) {
                 chartAmpliado.destroy();
                 chartAmpliado = null;
@@ -513,7 +501,7 @@
             chartContenedor.innerHTML = '<span style="color:#666;">Cargando datos detallados...</span>';
 
             try {
-                // Miramos si ya hemos descargado estos días antes para no hacer esperar al usuario
+                // Revisa la cache para no pedir datos si ya los tenemos
                 const cacheKey = `${codigo}_${dias}`;
                 let json;
 
@@ -533,7 +521,6 @@
 
                 chartContenedor.innerHTML = '';
 
-                // Traductor de fechas (EXACTO el que tú tenías)
                 const datosMapeados = json.fechas.map((f, i) => {
                     let timestamp;
                     if (!isNaN(f) && f !== null && f !== '') {
@@ -573,7 +560,7 @@
                     });
                 }
 
-                // Pintar el gráfico gigante con los días elegidos
+                // Pintar el gráfico grande con los días elegidos
                 const options = {
                     chart: { type: 'area', height: 350, animations: { enabled: false }, zoom: { enabled: true } },
                     series: [{ name: 'Valor Registrado', data: datosMapeados }],

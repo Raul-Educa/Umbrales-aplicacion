@@ -9,23 +9,17 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    // =========================================================
-    // 1. MOSTRAR LA TABLA PRINCIPAL (Gestión)
-    // =========================================================
+   // MUestra todos los usuarios por orden de rol
     public function gestionarUsuarios()
     {
-        // Traemos a los usuarios ordenados: 1º Superusuarios, 2º Staff, 3º Normales
         $usuarios = User::orderByDesc('is_superuser')
                         ->orderByDesc('is_staff')
                         ->get();
 
-        // AQUÍ ESTABA EL FALLO: Faltaba decirle que está en la carpeta 'auth'
         return view('auth.confUsuarios', compact('usuarios'));
     }
 
-    // =========================================================
-    // 2. CREAR USUARIO
-    // =========================================================
+    // Logia crear usuario
   public function guardarUsuario(Request $request)
 {
     $request->validate([
@@ -54,9 +48,7 @@ class UserController extends Controller
 
     return redirect()->route('confUsuarios')->with('exito', 'Usuario creado correctamente.');
 }
-    // =========================================================
-    // 3. ELIMINAR USUARIO
-    // =========================================================
+   // Logica eliminar usuario
     public function eliminarUsuario($id)
     {
         $user = User::findOrFail($id);
@@ -70,11 +62,7 @@ class UserController extends Controller
         return back()->with('success', 'Usuario eliminado con éxito.');
     }
 
-    // =========================================================
-    // 4. EDITAR USUARIO
-    // =========================================================
-
-// Muestra el formulario con los datos actuales
+   //Logica editar usuario
 public function mostrarFormularioEditar($id)
 {
     $usuario = User::findOrFail($id);
@@ -86,28 +74,24 @@ public function actualizarUsuario(Request $request, $id)
     $usuario = User::findOrFail($id);
     $esMiPropioUsuario = (\Illuminate\Support\Facades\Auth::id() == $id);
 
-    // 1. Definimos las reglas de validación básicas
     $reglas = [
         'first_name' => 'required|string|max:150',
         'last_name'  => 'required|string|max:150',
         'email'      => 'required|email|unique:auth_user,email,'.$id,
     ];
 
-    // 2. Si NO soy yo, añado la validación del rol
     if (!$esMiPropioUsuario) {
         $reglas['rol'] = 'required|in:usuario,staff,superuser';
     }
 
     $request->validate($reglas);
 
-    // 3. Preparamos los datos para actualizar
     $datos = [
         'first_name' => $request->first_name,
         'last_name'  => $request->last_name,
         'email'      => $request->email,
     ];
 
-    // 4. SOLO si NO soy yo, actualizamos los campos de rol (Django Style)
     if (!$esMiPropioUsuario) {
         $datos['is_superuser'] = ($request->rol == 'superuser');
         $datos['is_staff']     = ($request->rol == 'staff' || $request->rol == 'superuser');

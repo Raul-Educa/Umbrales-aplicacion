@@ -10,10 +10,8 @@ class GraficoController extends Controller
 {
     public function verGrafico($codigo)
     {
-        //Muestra el grafico con el codigo de ls estación
         return view('auth.grafico', compact('codigo'));
     }
-    // Coge todos los datos de la estacion y los convierte a JSON para el gáfico
     public function obtenerHistorial($codigo, Request $request)
     {
         $ultimaFechaObj = DB::table('umbrales_randatosepisodio')
@@ -27,21 +25,16 @@ class GraficoController extends Controller
 
         $dias = $request->query('dias', 7);
 
-        // INICIAMOS LA CONSULTA
         $query = DB::table('umbrales_randatosepisodio')
             ->where('rde_estacion', $codigo);
 
         if ($dias === 'all') {
-            // Histórico completo (sin filtro de fecha)
         } else {
-            // Restamos los días solicitados
             $fechaInicio = Carbon::parse($ultimaFechaObj->rde_hora)->subDays((int)$dias);
             $query->where('rde_hora', '>=', $fechaInicio);
         }
 
-        // --- LÓGICA DE DENSIDAD DE DATOS (Más puntos para la gráfica) ---
         if ($dias === 'all' || $dias == 30) {
-            // HISTÓRICO Y 30 DÍAS: Agrupados por HORA (24 datos diarios, adiós a las 00:00)
             $historial = $query->select(
                 DB::raw("DATE_TRUNC('hour', rde_hora) as fecha_agrupada"),
                 DB::raw("ROUND(AVG(rde_valor)::numeric, 2) as media_valor")
@@ -50,7 +43,6 @@ class GraficoController extends Controller
                 ->orderBy('fecha_agrupada', 'asc')
                 ->get();
         } else {
-            // 1, 7 y 10 DÍAS: Datos crudos (Todos los puntos exactos, cada 15m, 5m, etc.)
             $historial = $query->select(
                 'rde_hora as fecha_agrupada',
                 'rde_valor as media_valor'

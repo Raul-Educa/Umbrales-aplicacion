@@ -18,10 +18,9 @@
         padding: 0;
     }
 
-    /* Cabecera institucional */
+    /* Cabecera */
     .cabeceraInstitucional {
         background-color: #1a3a5c;
-        /* Márgenes negativos para anular los márgenes de @page y obligar a la cabecera a tocar los bordes del folio */
         margin-top: -2.5cm;
         margin-left: -2cm;
         margin-right: -2cm;
@@ -124,7 +123,6 @@
         margin: 0;
     }
 
-    /* Tabla de metadatos */
     .fichaTable {
         width: 100%;
         border-collapse: collapse;
@@ -175,7 +173,6 @@
         font-weight: 500;
     }
 
-    /* Seccion y descripcion */
     .seccion {
         margin-bottom: 28px;
     }
@@ -218,10 +215,9 @@
         margin-bottom: 0;
     }
 
-    /* Pie de pagina fijo */
+    /* Pie de pagina */
     .piePagina {
         position: fixed;
-        /* Se ancla al fondo absoluto del folio ignorando @page */
         bottom: -3cm;
         left: -2cm;
         right: -2cm;
@@ -265,7 +261,6 @@
         color: #6a7a8a;
     }
 
-    /* Utilidades */
     .noBreak {
         page-break-inside: avoid;
     }
@@ -280,7 +275,6 @@
 
 <body>
 
-{{-- Importante: En DOMPDF el pie de página siempre debe ir primero en el HTML para que se repita en todas las hojas --}}
 <div class="piePagina">
     <div class="pieBanda"></div>
     <div class="pieContenido">
@@ -333,7 +327,7 @@
 
         <tr>
             <td class="fichaLabel">Provincias afectadas:</td>
-            {{-- Si se han marcado todas las provincias, el controlador mandará "Todas las provincias..." --}}
+            {{-- Si se han marcado todas las provincias, el controlador mandará "Todas las provincias" --}}
             <td class="fichaValue">{{ $provincias }}</td>
         </tr>
         <tr>

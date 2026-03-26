@@ -57,12 +57,11 @@
 
 
 
-        /* Colores exactos de las situaciones de emergencia */
 
         :root {
 
             --n0: #ffffff;
-            /* Normalidad (Sin alerta) */
+            /* Normalidad*/
 
             --n1: #eeee7b;
             /* Preemergencia / Alerta */
@@ -240,8 +239,11 @@
             position: absolute;
             top: 0;
             right: 0;
-            border-top: 10px solid rgba(0, 0, 0, 0.6);
-            border-left: 10px solid transparent;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 12px 12px 0;
+            border-color: transparent #374151 transparent transparent;
             z-index: 2;
         }
 
@@ -252,19 +254,13 @@
             margin-top: 15px;
             border-radius: 4px;
             max-height: 250px;
-            /* Evita que el modal sea gigante */
             overflow-y: auto;
-            /* Añade scroll si hay mucho historial */
         }
     </style>
 
 
 
     <div class="matriz-container">
-        {{-- Si se quisiese mostrar aragon, se cambiaria a true --}}
-        @php
-            $mostrarAragon = false;
-        @endphp
         <table class="matriz">
 
             <thead>
@@ -339,7 +335,8 @@
                                 <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
                                     data-zona="{{ $c->c_comunidad_autonoma }}" data-hora="{{ $info['hora'] ?? '' }}"
                                     data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-                                    data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}">
+                                    data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}"
+                                    data-num-eventos="{{ $info['num_eventos'] ?? 0 }}">
                                 </td>
                             @endfor
                         @endforeach
@@ -372,7 +369,8 @@
                                         <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
                                             data-zona="{{ $p->p_provincia }}" data-hora="{{ $info['hora'] ?? '' }}"
                                             data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-                                            data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}">
+                                            data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}"
+                                            data-num-eventos="{{ $info['num_eventos'] ?? 0 }}">
                                         </td>
                                     @endfor
                                 @endforeach
@@ -520,7 +518,6 @@
 
 
            document.addEventListener('click', function(e) {
-                // Usamos closest() para atrapar el clic aunque el usuario pinche en el borde o en el triangulito negro
                 const td = e.target.closest('.celda-click');
 
                 if (td) {

@@ -351,7 +351,6 @@ class EpisodioController extends Controller
         $nombreEpisodio = $episodio->re_nombre ?? 'Episodio ' . $episodio->re_id;
         $ccaa = $episodio->nombre_ccaa ?? 'CCAA Desconocida';
 
-        // Formateamos las fechas para que se vean bien (ej: "12/03/2026")
         $horaIni = $episodio->re_hora_inicio ? Carbon::parse($episodio->re_hora_inicio)->format('d/m/Y') : '---';
 
         $horaFinText = '';
@@ -361,7 +360,6 @@ class EpisodioController extends Controller
             $horaFinText = ' - (Activo)';
         }
 
-        // Juntamos todo en un string limpio
         $tituloDetalle = "Detalle: {$nombreEpisodio} | {$ccaa} | Inicio: {$horaIni}{$horaFinText}";
 
         return view('auth.episodios_detalle', [

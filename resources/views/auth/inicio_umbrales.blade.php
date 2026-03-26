@@ -2,57 +2,256 @@
 
 @section('contenido')
     <style>
-        .tablaHidro { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .tablaHidro th { text-align: left; padding: 12px; border-bottom: 2px solid #dee2e6; color: #555; font-size: 0.85rem; }
-        .tablaHidro td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+        .tablaHidro {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-        .filaAlerta3 { background-color: rgba(255, 0, 0, 0.15) !important; font-weight: bold; }
-        .filaAlerta2 { background-color: rgba(255, 140, 0, 0.15) !important; }
-        .filaAlerta1 { background-color: rgba(255, 215, 0, 0.15) !important; }
+        .tablaHidro th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #dee2e6;
+            color: #555;
+            font-size: 0.85rem;
+        }
 
-        .puntEstado { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .punt3 { background-color: red; box-shadow: 0 0 5px red; }
-        .punt2 { background-color: orange; }
-        .punt1 { background-color: gold; }
-        .punt0 { background-color: #bbb; }
+        .tablaHidro td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+        }
 
-        .etiquetaGlobal { background-color: #455a64; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
-        .cajaValor { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: #333; }
+        .filaAlerta3 {
+            background-color: rgba(255, 0, 0, 0.15) !important;
+            font-weight: bold;
+        }
 
-        .filaGrafico { background: rgba(255, 255, 255, 0.5); border-radius: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .filaGrafico:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .filaAlerta2 {
+            background-color: rgba(255, 140, 0, 0.15) !important;
+        }
 
-        .contenedorPestanas { margin-bottom: 20px; border-bottom: 2px solid #dee2e6; display: flex; gap: 10px; margin-top: 20px; }
-        .botonPestana { padding: 10px 20px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; border-radius: 8px 8px 0 0; color: #666; transition: 0.3s; }
-        .botonPestana.activo { background: #0d6efd; color: white; }
-        .contenidoPestana { display: none; }
-        .contenidoPestana.activo { display: block; }
+        .filaAlerta1 {
+            background-color: rgba(255, 215, 0, 0.15) !important;
+        }
 
-        .capaModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; }
-        .contenidoModal { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 900px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); position: relative; }
-        .cabeceraModal { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .puntEstado {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
 
-        .botonCerrar { background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; }
-        .botonCerrar:hover { background: #dc2626; }
+        .punt3 {
+            background-color: red;
+            box-shadow: 0 0 5px red;
+        }
+
+        .punt2 {
+            background-color: orange;
+        }
+
+        .punt1 {
+            background-color: gold;
+        }
+
+        .punt0 {
+            background-color: #bbb;
+        }
+
+        .etiquetaGlobal {
+            background-color: #455a64;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .cajaValor {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: #333;
+        }
+
+        .filaGrafico {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .filaGrafico:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .contenedorPestanas {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .botonPestana {
+            padding: 10px 20px;
+            border: none;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .botonPestana.activo {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .contenidoPestana {
+            display: none;
+        }
+
+        .contenidoPestana.activo {
+            display: block;
+        }
+
+        .capaModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contenidoModal {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .cabeceraModal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .botonCerrarModal {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botonCerrarModal:hover {
+            background: #dc2626;
+        }
 
         /* Botones de Filtro de Tiempo */
-        .filtrosTiempoGrafico { padding: 10px 20px; background: #f8f9fa; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .botonFiltroTiempo { background: white; border: 1px solid #ced4da; padding: 4px 14px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #495057; }
-        .botonFiltroTiempo:hover { background: #e9ecef; }
-        .botonFiltroTiempo.activo { background: #0d6efd; color: white; border-color: #0d6efd; }
+        .filtrosTiempoGrafico {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-        /* --- ESTILOS PARA EL BOCADILLO (TOOLTIP) --- */
-        .iconoInfo { position: relative; display: inline-block; cursor: help; color: #0d6efd; margin-left: 5px; font-weight: bold; font-size: 0.85rem; background: #e9ecef; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; }
+        .botonFiltroTiempo {
+            background: white;
+            border: 1px solid #ced4da;
+            padding: 4px 14px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #495057;
+        }
+
+        .botonFiltroTiempo:hover {
+            background: #e9ecef;
+        }
+
+        .botonFiltroTiempo.activo {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+
+        /* --- Estilos de Información --- */
+        .iconoInfo {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: #0d6efd;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            background: #e9ecef;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            text-align: center;
+            line-height: 18px;
+        }
+
         .iconoInfo .bocadilloTexto {
             visibility: hidden;
-            width: 260px; /* <--- Ancho ampliado para que quepa bien la opción 1 */
+            width: 260px;
             background-color: #333;
-            color: #fff; text-align: center; border-radius: 6px; padding: 8px 10px;
-            position: absolute; z-index: 100; bottom: 130%; left: 50%; transform: translateX(-50%);
-            opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; font-weight: normal; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            font-weight: normal;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        .iconoInfo .bocadilloTexto::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #333 transparent transparent transparent; }
-        .iconoInfo:hover .bocadilloTexto { visibility: visible; opacity: 1; }
+
+        .iconoInfo .bocadilloTexto::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .iconoInfo:hover .bocadilloTexto {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -67,8 +266,10 @@
     </div>
 
     <div class="contenedorPestanas">
-        <button class="botonPestana activo" onclick="abrirPestana(event, 'pestanaAforos')">Aforos en Río ({{ count($aforos) }})</button>
-        <button class="botonPestana" onclick="abrirPestana(event, 'pestanaEmbalses')">Embalses ({{ count($embalses) }})</button>
+        <button class="botonPestana activo" onclick="abrirPestana(event, 'pestanaAforos')">Aforos en Río
+            ({{ count($aforos) }})</button>
+        <button class="botonPestana" onclick="abrirPestana(event, 'pestanaEmbalses')">Embalses
+            ({{ count($embalses) }})</button>
     </div>
 
     {{-- CONTENIDO AFOROS --}}
@@ -81,12 +282,12 @@
         @include('auth.tabla_inicio', ['estaciones' => $embalses, 'label_acc' => 'Volumen'])
     </div>
 
-    {{-- MODAL DEL GRÁFICO (Con barra de filtros) --}}
+    {{-- MODAL DEL GRÁFICO --}}
     <div id="graficoModal" class="capaModal">
         <div class="contenidoModal">
             <div class="cabeceraModal">
                 <h3 id="tituloModal" style="margin: 0; color: #333;">Detalle de Estación</h3>
-                <button id="cerrarModal" class="botonCerrar">X</button>
+                <button id="cerrarModal" class="botonCerrarModal">X</button>
             </div>
 
             <div class="filtrosTiempoGrafico">
@@ -99,7 +300,8 @@
             </div>
 
             <div class="cuerpoModal">
-                <div id="graficoDetalle" style="min-height: 300px; display: flex; align-items: center; justify-content: center; color: #666;">
+                <div id="graficoDetalle"
+                    style="min-height: 300px; display: flex; align-items: center; justify-content: center; color: #666;">
                     Cargando datos detallados...
                 </div>
             </div>
@@ -124,8 +326,9 @@
             document.getElementById(nombrePestana).classList.add("activo");
             evt.currentTarget.classList.add("activo");
 
-            // Fuerza a redibujar los gráficos para evitar problemas de tamaño oculto
-            setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 50);
         }
 
         // VARIABLES Y LÓGICA DE GRÁFICOS
@@ -174,7 +377,8 @@
                         if (json.valores.length > maxPuntos) {
                             const bloque = Math.ceil(json.valores.length / maxPuntos);
                             for (let i = 0; i < json.valores.length; i += bloque) {
-                                let suma = 0, cant = 0;
+                                let suma = 0,
+                                    cant = 0;
                                 for (let j = 0; j < bloque && (i + j) < json.valores.length; j++) {
                                     if (json.valores[i + j] != null) {
                                         suma += parseFloat(json.valores[i + j]);
@@ -189,11 +393,38 @@
 
                         div.innerHTML = '';
                         new ApexCharts(div, {
-                            chart: { type: 'area', height: 40, sparkline: { enabled: true }, animations: { enabled: false } },
-                            stroke: { curve: 'smooth', width: 2 },
-                            series: [{ name: 'Media', data: valoresMedios }],
+                            chart: {
+                                type: 'area',
+                                height: 40,
+                                sparkline: {
+                                    enabled: true
+                                },
+                                animations: {
+                                    enabled: false
+                                }
+                            },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 2
+                            },
+                            series: [{
+                                name: 'Media',
+                                data: valoresMedios
+                            }],
                             colors: ['#3b82f6'],
-                            tooltip: { fixed: { enabled: false }, x: { show: false }, y: { title: { formatter: () => '' } } }
+                            tooltip: {
+                                fixed: {
+                                    enabled: false
+                                },
+                                x: {
+                                    show: false
+                                },
+                                y: {
+                                    title: {
+                                        formatter: () => ''
+                                    }
+                                }
+                            }
                         }).render();
 
                         div.onclick = () => abrirModalGigante(codigo);
@@ -245,7 +476,8 @@
                 }
 
                 if (!json || !json.fechas || json.fechas.length === 0) {
-                    contenedorGrafico.innerHTML = '<span style="color:red">No hay datos para este rango de tiempo.</span>';
+                    contenedorGrafico.innerHTML =
+                        '<span style="color:red">No hay datos para este rango de tiempo.</span>';
                     return;
                 }
 
@@ -261,13 +493,17 @@
                             let partes = str.split(' ');
                             let fecha = partes[0].split('/');
                             let hora = (partes[1] || '00:00:00').split(':');
-                            timestamp = new Date(fecha[2], fecha[1] - 1, fecha[0], hora[0], hora[1], hora[2] || 0).getTime();
+                            timestamp = new Date(fecha[2], fecha[1] - 1, fecha[0], hora[0], hora[1], hora[2] ||
+                                0).getTime();
                         } else {
                             timestamp = new Date(str.replace(/-/g, '/').replace(' ', 'T')).getTime();
                         }
                     }
                     let valorEjeY = json.valores[i] === null ? null : parseFloat(json.valores[i]);
-                    return { x: timestamp, y: valorEjeY };
+                    return {
+                        x: timestamp,
+                        y: valorEjeY
+                    };
                 });
 
                 const umbrales = json.umbrales || [];
@@ -283,31 +519,109 @@
                         opacity: 0.15,
                         label: {
                             borderColor: u.color,
-                            style: { color: '#fff', background: u.color, fontWeight: 'bold', padding: { left: 5, right: 5, top: 2, bottom: 2 } },
+                            style: {
+                                color: '#fff',
+                                background: u.color,
+                                fontWeight: 'bold',
+                                padding: {
+                                    left: 5,
+                                    right: 5,
+                                    top: 2,
+                                    bottom: 2
+                                }
+                            },
                             text: `${u.texto} (> ${u.valor})`
                         }
                     });
                 }
 
                 const opciones = {
-                    chart: { type: 'area', height: 350, animations: { enabled: false }, zoom: { enabled: true } },
-                    series: [{ name: 'Valor Registrado', data: datosMapeados }],
-                    annotations: { yaxis: zonasUmbrales },
-                    stroke: { curve: 'straight', width: 2 },
+                    chart: {
+                        type: 'area',
+                        height: 350,
+                        animations: {
+                            enabled: false
+                        },
+                        zoom: {
+                            enabled: true
+                        }
+                    },
+                    series: [{
+                        name: 'Valor Registrado',
+                        data: datosMapeados
+                    }],
+                    annotations: {
+                        yaxis: zonasUmbrales
+                    },
+                    stroke: {
+                        curve: 'straight',
+                        width: 2
+                    },
                     colors: ['#0d6efd'],
-                    fill: { type: 'gradient', gradient: { opacityFrom: 0.6, opacityTo: 0.1 } },
-                    dataLabels: { enabled: false },
-                    markers: { size: 0, hover: { size: 5 } },
-                    xaxis: { type: 'datetime', labels: { datetimeUTC: false, format: 'dd/MM HH:mm' } },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            opacityFrom: 0.6,
+                            opacityTo: 0.1
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 0,
+                        hover: {
+                            size: 5
+                        }
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        labels: {
+                            datetimeUTC: false,
+                            format: 'dd/MM HH:mm'
+                        }
+                    },
                     yaxis: {
-                        title: { text: 'Valor Registrado' },
-                        labels: { formatter: function(val) { return (val === null || val === undefined) ? '' : Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } }
+                        title: {
+                            text: 'Valor Registrado'
+                        },
+                        labels: {
+                            formatter: function(val) {
+                                return (val === null || val === undefined) ? '' : Number(val).toLocaleString(
+                                    'es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                            }
+                        }
                     },
                     tooltip: {
-                        x: { format: 'dd/MM/yyyy HH:mm' },
-                        y: { formatter: function(val) { return (val === null || val === undefined) ? '---' : Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } }
+                        x: {
+                            format: 'dd/MM/yyyy HH:mm'
+                        },
+                        y: {
+                            formatter: function(val) {
+                                return (val === null || val === undefined) ? '---' : Number(val).toLocaleString(
+                                    'es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                            }
+                        }
                     },
-                    grid: { borderColor: '#f1f1f1', xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } }
+                    grid: {
+                        borderColor: '#f1f1f1',
+                        xaxis: {
+                            lines: {
+                                show: true
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: true
+                            }
+                        }
+                    }
                 };
 
                 graficoAmpliado = new ApexCharts(contenedorGrafico, opciones);

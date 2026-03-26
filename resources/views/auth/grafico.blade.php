@@ -87,7 +87,6 @@
                         y: json.valores[i]
                     }));
 
-                    // Línea de umbral, aquí ejemplo fijo en 75 (puedes cambiar o sacar de la BD)
                     const umbral = datosArea.map(d => ({
                         x: d.x,
                         y: 75

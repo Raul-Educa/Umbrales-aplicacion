@@ -67,7 +67,6 @@
             text-transform: uppercase;
         }
 
-        /* ANCHOS DE COLUMNA REAJUSTADOS PARA 9 COLUMNAS */
         .col-numero { width: 7%; }
         .col-nombre { width: 13%; }
         .col-ccaa { width: 11%; }
@@ -115,10 +114,10 @@
 
                        <td>
                             @if(!empty($ep->re_hora_fin))
-                                {{-- Si tiene hora de fin, es HISTÓRICO. No mostramos alarmas actuales. --}}
+                                {{-- Si tiene hora de fin, es HISTÓRICO. No muestra alarmas actuales. --}}
                                 <span style="color: #999;">---</span>
                             @else
-                                {{-- Si NO tiene hora de fin, es ACTIVO. Calculamos cuáles pitan ahora mismo. --}}
+                                {{-- Si NO tiene hora de fin, es ACTIVO. Calculamos cuáles hay ahora mismo. --}}
                                 @php
                                     $alarmadasReales = [];
                                     if(!empty($ep->re_estaciones_historicas)) {

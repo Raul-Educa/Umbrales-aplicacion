@@ -138,7 +138,7 @@
             Volver</a>
     </div>
 
-    {{-- ================= EMBALSES ================= --}}
+    {{-- EMBALSES --}}
     @php
         $embalsesA3 = $embalses->where('nivel_alerta', 3)->count();
         $embalsesA2 = $embalses->where('nivel_alerta', 2)->count();
@@ -213,7 +213,7 @@
         <p style="padding: 15px; color: #999; background: #f8f9fa; border-radius: 6px;">No se encontraron embalses.</p>
     @endif
 
-    {{-- ================= ROEAS ================= --}}
+    {{-- ROEAS --}}
     @php
         $roeasA3 = $roeas->where('nivel_alerta', 3)->count();
         $roeasA2 = $roeas->where('nivel_alerta', 2)->count();
@@ -290,7 +290,7 @@
         <p style="padding: 15px; color: #999; background: #f8f9fa; border-radius: 6px;">No se encontraron roeas.</p>
     @endif
 
-    {{-- ================= MARCOS DE CONTROL ================= --}}
+    {{-- MARCOS DE CONTROL --}}
     @php
         $mcA3 = $marcos_control->where('nivel_alerta', 3)->count();
         $mcA2 = $marcos_control->where('nivel_alerta', 2)->count();
@@ -369,7 +369,7 @@
         </p>
     @endif
 
-    {{-- ================= AFOROS EN RÍOS ================= --}}
+    {{-- AFOROS EN RÍOS --}}
     @php
         $arA3 = $aforos->where('nivel_alerta', 3)->count();
         $arA2 = $aforos->where('nivel_alerta', 2)->count();

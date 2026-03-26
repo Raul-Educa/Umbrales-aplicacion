@@ -49,9 +49,7 @@ class EmergenciaController extends Controller
                 ->withErrors(['hora' => 'Error: La hora de la emergencia no puede ser futura']);
         }
 
-        // =====================================================================
-        // 1. CALCULAMOS LAS PROVINCIAS AFECTADAS ANTES DE HACER EL PDF
-        // =====================================================================
+
         $provinciasIds = $request->input('provincias_ids', []);
         $tieneProvincias = UmbralesProvincia::where('c_id', $request->ccaa_id)->exists();
 
@@ -65,23 +63,19 @@ class EmergenciaController extends Controller
 
         if (!$tieneProvincias) {
             $provinciasIds = [null];
-            $textoProvincias = "Toda la Comunidad Autónoma"; // Caso Madrid, que no tiene provincias
+            $textoProvincias = "Toda la Comunidad Autónoma";
         } else {
             $provinciasDeLaCcaa = UmbralesProvincia::where('c_id', $request->ccaa_id)->get();
 
-            // Si el número de provincias marcadas es igual al total de provincias de esa CCAA...
             if (count($provinciasIds) == $provinciasDeLaCcaa->count()) {
                 $textoProvincias = "Todas las provincias (Afectación a nivel autonómico)";
             } else {
-                // Si solo son algunas, sacamos sus nombres y los separamos por comas
                 $nombresProvincias = $provinciasDeLaCcaa->whereIn('p_id', $provinciasIds)->pluck('p_provincia')->toArray();
                 $textoProvincias = implode(', ', $nombresProvincias);
             }
         }
 
-        // =====================================================================
-        // 2. GESTIÓN DEL PDF (Ahora le pasamos la variable 'provincias')
-        // =====================================================================
+
         $rutaPdf = null;
 
         if ($request->tipo_documento == 'pdf_oficial' && $request->hasFile('archivo_pdf')) {
@@ -96,7 +90,7 @@ class EmergenciaController extends Controller
                 'fecha'      => $request->fecha,
                 'hora'       => $request->hora,
                 'ccaa'       => UmbralesCcaa::find($request->ccaa_id)->c_comunidad_autonoma,
-                'provincias' => $textoProvincias // <-- ¡LA NUEVA VARIABLE!
+                'provincias' => $textoProvincias
             ]);
 
             $nombrePdf = time() . '_generado_correo.pdf';
@@ -104,9 +98,7 @@ class EmergenciaController extends Controller
             $rutaPdf = 'pdf_emergencia/' . $nombrePdf;
         }
 
-        // =====================================================================
-        // 3. GUARDAMOS EN LA BASE DE DATOS
-        // =====================================================================
+
         DB::transaction(function () use ($request, $rutaPdf, $provinciasIds) {
             foreach ($provinciasIds as $provId) {
                 SituacionEmergencia::create([
@@ -182,9 +174,17 @@ class EmergenciaController extends Controller
 
                         if ($ultimoEstado && $ultimoEstado->nivel > 0) {
                             $huboCambio = false;
+                            $contadorEventos = 0;
 
                             if ($eventosHoy->count() > 0) {
                                 $huboCambio = ($estadoAnterior && $estadoAnterior->nivel > 0) || ($eventosHoy->count() > 1);
+                                
+                                // Contar eventos: estado anterior + eventos de hoy
+                                if ($estadoAnterior && $estadoAnterior->nivel > 0) {
+                                    $contadorEventos++;
+                                }
+                                $contadorEventos += $eventosHoy->count();
+                                
                                 $historialDia = "<b>HISTORIAL DEL DÍA:</b><br><br>";
 
                                 if ($estadoAnterior && $estadoAnterior->nivel > 0) {
@@ -237,7 +237,8 @@ class EmergenciaController extends Controller
                                 'hora'   => $ultimoEstado->hora,
                                 'desc'   => $historialDia,
                                 'pdf'    => $ultimoEstado->ruta_pdf,
-                                'cambio' => $huboCambio
+                                'cambio' => $huboCambio,
+                                'num_eventos' => $contadorEventos
                             ];
                         }
                     }
