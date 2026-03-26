@@ -111,7 +111,6 @@ class EpisodioController extends Controller
         ]);
     }
 
-    // --- NUEVA FUNCIÓN: Extrae y calcula los niveles de alerta para las tablas ---
     private function obtenerNivelesAlertaVarios($episodios)
     {
         $codigos = [];
