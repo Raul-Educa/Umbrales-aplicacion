@@ -173,6 +173,7 @@
         .btn-admin-ghost.danger:hover {
             background: #fff5f5;
         }
+
         .filtros-tiempo-grafico {
             padding: 10px 20px;
             background: #f8f9fa;
@@ -182,6 +183,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+
         .btn-filtro-tiempo {
             background: white;
             border: 1px solid #ced4da;
@@ -193,9 +195,11 @@
             transition: all 0.2s;
             color: #495057;
         }
+
         .btn-filtro-tiempo:hover {
             background: #e9ecef;
         }
+
         .btn-filtro-tiempo.active {
             background: #2563eb;
             color: white;
@@ -248,13 +252,15 @@
                             onsubmit="return confirm('ULTIMO AVISO: ¿Estas seguro de que quieres terminar este episodio y moverlo al histórico?');"
                             style="display: flex; gap: 15px; align-items: center;">
                             @csrf
-                            <span style="color: #dc3545; font-size: 0.85rem;"><strong>Atención:</strong> Seguro que quieres cerrar el episodio {{ $episodio->re_id }}?</span>
+                            <span style="color: #dc3545; font-size: 0.85rem;"><strong>Atención:</strong> Seguro que quieres
+                                cerrar el episodio {{ $episodio->re_id }}?</span>
 
                             <button type="button" onclick="configuracionAdmin('admin-form-cerrar')"
                                 style="background: transparent; border: 1px solid #ced4da; color: #6c757d; padding: 5px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; transition: 0.2s;">Cancelar</button>
 
                             <button type="submit"
-                                style="background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">Sí, Cerrar Ahora</button>
+                                style="background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">Sí,
+                                Cerrar Ahora</button>
                         </form>
                     </div>
                 @endif
@@ -364,7 +370,7 @@
         </tbody>
     </table>
 
-   {{-- MODAL DEL GRÁFICO --}}
+    {{-- MODAL DEL GRÁFICO --}}
     <div id="graficoModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -440,7 +446,8 @@
                         if (json.valores.length > maxPuntos) {
                             const bloque = Math.ceil(json.valores.length / maxPuntos);
                             for (let i = 0; i < json.valores.length; i += bloque) {
-                                let suma = 0, cant = 0;
+                                let suma = 0,
+                                    cant = 0;
                                 for (let j = 0; j < bloque && (i + j) < json.valores.length; j++) {
                                     if (json.valores[i + j] != null) {
                                         suma += parseFloat(json.valores[i + j]);
@@ -455,11 +462,38 @@
 
                         div.innerHTML = '';
                         new ApexCharts(div, {
-                            chart: { type: 'area', height: 40, sparkline: { enabled: true }, animations: { enabled: false } },
-                            stroke: { curve: 'smooth', width: 2 },
-                            series: [{ name: 'Media', data: valoresMedios }],
+                            chart: {
+                                type: 'area',
+                                height: 40,
+                                sparkline: {
+                                    enabled: true
+                                },
+                                animations: {
+                                    enabled: false
+                                }
+                            },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 2
+                            },
+                            series: [{
+                                name: 'Media',
+                                data: valoresMedios
+                            }],
                             colors: ['#3b82f6'],
-                            tooltip: { fixed: { enabled: false }, x: { show: false }, y: { title: { formatter: () => '' } } }
+                            tooltip: {
+                                fixed: {
+                                    enabled: false
+                                },
+                                x: {
+                                    show: false
+                                },
+                                y: {
+                                    title: {
+                                        formatter: () => ''
+                                    }
+                                }
+                            }
                         }).render();
 
                         // Al hacer clic, abrimos la ventana gigante
@@ -486,11 +520,11 @@
             cargarGraficoGrande(codigo, '7');
         }
 
-// Logica para cargar el gáfico grande
+        // Logica para cargar el gáfico grande
         async function cargarGraficoGrande(codigo, dias) {
             const chartContenedor = document.getElementById('chartDetalle');
 
-            // Si ya había un gráfico grande abierto, lo borramos para pintar el nuevo
+            // Si ya había un gráfico grande abierto, se borra para pintar el nuevo
             if (chartAmpliado) {
                 chartAmpliado.destroy();
                 chartAmpliado = null;
@@ -515,7 +549,8 @@
                 }
 
                 if (!json || !json.fechas || json.fechas.length === 0) {
-                    chartContenedor.innerHTML = '<span style="color:red">No hay datos para este rango de tiempo.</span>';
+                    chartContenedor.innerHTML =
+                    '<span style="color:red">No hay datos para este rango de tiempo.</span>';
                     return;
                 }
 
@@ -531,13 +566,17 @@
                             let partes = str.split(' ');
                             let fecha = partes[0].split('/');
                             let hora = (partes[1] || '00:00:00').split(':');
-                            timestamp = new Date(fecha[2], fecha[1] - 1, fecha[0], hora[0], hora[1], hora[2] || 0).getTime();
+                            timestamp = new Date(fecha[2], fecha[1] - 1, fecha[0], hora[0], hora[1], hora[2] ||
+                                0).getTime();
                         } else {
                             timestamp = new Date(str.replace(/-/g, '/').replace(' ', 'T')).getTime();
                         }
                     }
                     let valorEjeY = json.valores[i] === null ? null : parseFloat(json.valores[i]);
-                    return { x: timestamp, y: valorEjeY };
+                    return {
+                        x: timestamp,
+                        y: valorEjeY
+                    };
                 });
 
                 // Umbrales
@@ -554,7 +593,17 @@
                         opacity: 0.15,
                         label: {
                             borderColor: u.color,
-                            style: { color: '#fff', background: u.color, fontWeight: 'bold', padding: { left: 5, right: 5, top: 2, bottom: 2 } },
+                            style: {
+                                color: '#fff',
+                                background: u.color,
+                                fontWeight: 'bold',
+                                padding: {
+                                    left: 5,
+                                    right: 5,
+                                    top: 2,
+                                    bottom: 2
+                                }
+                            },
                             text: `${u.texto} (> ${u.valor})`
                         }
                     });
@@ -562,24 +611,92 @@
 
                 // Pintar el gráfico grande con los días elegidos
                 const options = {
-                    chart: { type: 'area', height: 350, animations: { enabled: false }, zoom: { enabled: true } },
-                    series: [{ name: 'Valor Registrado', data: datosMapeados }],
-                    annotations: { yaxis: zonasUmbrales },
-                    stroke: { curve: 'straight', width: 2 },
+                    chart: {
+                        type: 'area',
+                        height: 350,
+                        animations: {
+                            enabled: false
+                        },
+                        zoom: {
+                            enabled: true
+                        }
+                    },
+                    series: [{
+                        name: 'Valor Registrado',
+                        data: datosMapeados
+                    }],
+                    annotations: {
+                        yaxis: zonasUmbrales
+                    },
+                    stroke: {
+                        curve: 'straight',
+                        width: 2
+                    },
                     colors: ['#2563eb'],
-                    fill: { type: 'gradient', gradient: { opacityFrom: 0.6, opacityTo: 0.1 } },
-                    dataLabels: { enabled: false },
-                    markers: { size: 0, hover: { size: 5 } },
-                    xaxis: { type: 'datetime', labels: { datetimeUTC: false, format: 'dd/MM HH:mm' } },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            opacityFrom: 0.6,
+                            opacityTo: 0.1
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 0,
+                        hover: {
+                            size: 5
+                        }
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        labels: {
+                            datetimeUTC: false,
+                            format: 'dd/MM HH:mm'
+                        }
+                    },
                     yaxis: {
-                        title: { text: 'Tag Referencia' },
-                        labels: { formatter: function(val) { return (val === null || val === undefined) ? '' : Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } }
+                        title: {
+                            text: 'Tag Referencia'
+                        },
+                        labels: {
+                            formatter: function(val) {
+                                return (val === null || val === undefined) ? '' : Number(val).toLocaleString(
+                                    'es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                            }
+                        }
                     },
                     tooltip: {
-                        x: { format: 'dd/MM/yyyy HH:mm' },
-                        y: { formatter: function(val) { return (val === null || val === undefined) ? '---' : Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } }
+                        x: {
+                            format: 'dd/MM/yyyy HH:mm'
+                        },
+                        y: {
+                            formatter: function(val) {
+                                return (val === null || val === undefined) ? '---' : Number(val).toLocaleString(
+                                    'es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                            }
+                        }
                     },
-                    grid: { borderColor: '#f1f1f1', xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } }
+                    grid: {
+                        borderColor: '#f1f1f1',
+                        xaxis: {
+                            lines: {
+                                show: true
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: true
+                            }
+                        }
+                    }
                 };
 
                 chartAmpliado = new ApexCharts(chartContenedor, options);

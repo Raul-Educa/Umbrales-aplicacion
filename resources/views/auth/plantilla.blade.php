@@ -7,8 +7,6 @@
     <title>Gestión Umbrales</title>
 
     <style>
-        /* ===== BASE ===== */
-
         *,
         *::before,
         *::after {
@@ -26,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* ===== CABECERA ===== */
+        /* CABECERA */
 
         .cabecera {
             height: 60px;
@@ -94,7 +92,7 @@
             color: #cbd5e1;
         }
 
-        /* ===== CERRAR SESION ===== */
+        /*CERRAR SESION*/
 
         .botonCerrar {
             text-decoration: none;
@@ -112,7 +110,7 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
-        /* ===== LAYOUT ===== */
+        /* LAYOUT */
 
         .contenedor {
             display: flex;
@@ -121,7 +119,7 @@
             overflow: hidden;
         }
 
-        /* ===== BARRA LATERAL ===== */
+        /* BARRA LATERAL */
 
         .barraLateral {
             width: 260px;
@@ -229,7 +227,7 @@
             transform: rotate(90deg);
         }
 
-        /* ===== BUSCADOR ===== */
+        /*  BUSCADOR  */
 
         .barraLateral form {
             padding: 10px 16px 12px;
@@ -261,7 +259,7 @@
             margin: 12px 16px;
         }
 
-        /* ===== CONTENIDO ===== */
+        /*  CONTENIDO  */
 
         .contenidoPrincipal {
             flex-grow: 1;
@@ -386,7 +384,7 @@
                     </label>
 
                     <ul class="submenu">
-                        <li><a href="#">Estado Actual</a></li>
+                        <li><a href="{{ route('estado.actual') }}">Estado Actual (todas las CCAA)</a></li>
                         <li><a href="{{ route('tajo.activos') }}">Episodios Activos</a></li>
                         <li><a href="{{ route('tajo.historico') }}">Histórico Episodios</a></li>
                     </ul>
@@ -407,7 +405,8 @@
                         </label>
 
                         <ul class="submenu">
-                            <li><a href="#">Estado Actual</a></li>
+                            <li><a href="{{ route('ccaa.estadoActual', ['id' => $ccaa->c_id]) }}">Estado Actual</a>
+                            </li>
                             <li><a href="{{ route('ccaa.activos', $ccaa->c_id) }}">Episodios Activos</a></li>
                             <li><a href="{{ route('ccaa.historico', $ccaa->c_id) }}">Histórico Episodios</a></li>
                         </ul>

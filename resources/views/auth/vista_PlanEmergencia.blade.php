@@ -4,7 +4,7 @@
 
 @section('contenido')
     <style>
-        .matriz-container {
+        .matrizContainer {
             overflow-x: auto;
             border: 2px solid #333;
             margin-top: 20px;
@@ -27,19 +27,19 @@
 
 
 
-        .fila-ccaa {
+        .filaComunidad {
             background: #e9ecef;
             font-weight: bold;
             border-top: 2px solid #666;
         }
 
-        .fila-provincia {
+        .filaProvincia {
             background: #fff;
         }
 
 
 
-        .col-nombre {
+        .colNombre {
             width: 220px;
             text-align: left;
             padding-left: 10px;
@@ -50,7 +50,7 @@
             border-right: 2px solid #666 !important;
         }
 
-        .indent {
+        .sangriaProvincia {
             padding-left: 30px !important;
             color: #444;
         }
@@ -119,8 +119,8 @@
             position: relative;
         }
 
-        .rastro-h::after,
-        .rastro-v::after {
+        .rastroHorizontal::after,
+        .rastroVertical::after {
             content: '';
             position: absolute;
             top: 0;
@@ -132,22 +132,22 @@
             z-index: 5;
         }
 
-        .rastro-h::after {
+        .rastroHorizontal::after {
             box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.6);
         }
 
-        .rastro-v::after {
+        .rastroVertical::after {
             box-shadow: inset 2px 0 0 rgba(0, 0, 0, 0.6), inset -2px 0 0 rgba(0, 0, 0, 0.6);
         }
 
-        .celda-foco {
+        .celdaFoco {
             box-shadow: inset 0 0 0 3px #000 !important;
             filter: brightness(1.1);
             z-index: 10 !important;
             cursor: crosshair;
         }
 
-        .header-foco {
+        .encabezadoFoco {
             background-color: #333 !important;
             color: #fff !important;
             font-weight: bold;
@@ -161,16 +161,16 @@
 
         /* Estilos del Modal y Celdas Clicables */
 
-        .celda-click {
+        .celdaClicable {
             cursor: pointer !important;
         }
 
-        .celda-click:hover {
+        .celdaClicable:hover {
             filter: brightness(0.8) !important;
             box-shadow: inset 0 0 0 3px #fff !important;
         }
 
-        .modal-oculto {
+        .modalOculto {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -181,7 +181,7 @@
             background-color: rgba(0, 0, 0, 0.6);
         }
 
-        .modal-contenido {
+        .modalContenido {
             background-color: #fefefe;
             margin: 10% auto;
             padding: 25px;
@@ -192,7 +192,7 @@
             font-family: sans-serif;
         }
 
-        .cerrar-modal {
+        .cerrarModalBoton {
             color: #aaa;
             float: right;
             font-size: 28px;
@@ -200,18 +200,18 @@
             cursor: pointer;
         }
 
-        .cerrar-modal:hover {
+        .cerrarModalBoton:hover {
             color: black;
         }
 
-        .modal-subtitulo {
+        .modalSubtitulo {
             color: #666;
             font-size: 0.9em;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
 
-        .modal-caja-desc {
+        .modalCajaDescripcion {
             background: #f9f9f9;
             padding: 15px;
             border-left: 4px solid #333;
@@ -219,7 +219,7 @@
             border-radius: 4px;
         }
 
-        .btn-pdf {
+        .botonPdf {
             display: inline-block;
             background-color: #d9534f;
             color: white;
@@ -229,7 +229,7 @@
             font-weight: bold;
         }
 
-        .btn-pdf:hover {
+        .botonPdf:hover {
             background-color: #c9302c;
             color: white;
         }
@@ -258,28 +258,59 @@
         }
     </style>
 
-
-
-    <div class="matriz-container">
+    <div class="matrizContainer">
         <table class="matriz">
 
             <thead>
 
                 <tr>
 
-                    <th class="col-nombre" rowspan="2">ZONA / PROVINCIA</th>
+                    <th class="colNombre" rowspan="2">ZONA / PROVINCIA</th>
 
-                    @foreach ($meses as $m)
-                        <th colspan="{{ $m->daysInMonth }}">{{ strtoupper($m->translatedFormat('F Y')) }}</th>
+                    @foreach ($meses as $mes)
+                        @php
+                            $mesCarbon = null;
+                            if ($mes instanceof \Carbon\CarbonInterface) {
+                                $mesCarbon = $mes;
+                            } elseif ($mes instanceof \DateTimeInterface) {
+                                $mesCarbon = \Carbon\Carbon::instance($mes);
+                            } elseif (is_string($mes)) {
+                                $marcaTiempoMes = strtotime($mes);
+                                if ($marcaTiempoMes !== false) {
+                                    $mesCarbon = \Carbon\Carbon::createFromTimestamp($marcaTiempoMes);
+                                }
+                            }
+
+                            $diasDelMes = $mesCarbon ? $mesCarbon->daysInMonth : 1;
+                            $tituloMes = $mesCarbon
+                                ? strtoupper($mesCarbon->translatedFormat('F Y'))
+                                : 'FECHA NO DISPONIBLE';
+                        @endphp
+                        <th colspan="{{ $diasDelMes }}">{{ $tituloMes }}</th>
                     @endforeach
 
                 </tr>
 
                 <tr>
 
-                    @foreach ($meses as $m)
-                        @for ($d = 1; $d <= $m->daysInMonth; $d++)
-                            <th>{{ $d }}</th>
+                    @foreach ($meses as $mes)
+                        @php
+                            $mesCarbon = null;
+                            if ($mes instanceof \Carbon\CarbonInterface) {
+                                $mesCarbon = $mes;
+                            } elseif ($mes instanceof \DateTimeInterface) {
+                                $mesCarbon = \Carbon\Carbon::instance($mes);
+                            } elseif (is_string($mes)) {
+                                $marcaTiempoMes = strtotime($mes);
+                                if ($marcaTiempoMes !== false) {
+                                    $mesCarbon = \Carbon\Carbon::createFromTimestamp($marcaTiempoMes);
+                                }
+                            }
+
+                            $diasDelMes = $mesCarbon ? $mesCarbon->daysInMonth : 1;
+                        @endphp
+                        @for ($dia = 1; $dia <= $diasDelMes; $dia++)
+                            <th>{{ $dia }}</th>
                         @endfor
                     @endforeach
 
@@ -289,88 +320,122 @@
 
             <tbody>
 
-                @foreach ($ccaa as $c)
+                @foreach ($ccaa as $comunidad)
                     @php
 
-                        $esSimple =
-                            $c->c_comunidad_autonoma == 'Madrid' ||
-                            $c->c_comunidad_autonoma == 'Portugal' ||
-                            $c->c_comunidad_autonoma == 'Ayto. Madrid';
+                        $esComunidadSimple =
+                            $comunidad->c_comunidad_autonoma == 'Madrid' ||
+                            $comunidad->c_comunidad_autonoma == 'Portugal' ||
+                            $comunidad->c_comunidad_autonoma == 'Ayto. Madrid';
 
                     @endphp
 
+                    <tr class="filaComunidad">
 
+                        <td class="colNombre">
 
-                    <tr class="fila-ccaa">
+                            {{ strtoupper($comunidad->c_comunidad_autonoma) }}
 
-                        <td class="col-nombre">
-
-                            {{ strtoupper($c->c_comunidad_autonoma) }}
-
-                            @if ($c->plan_emergencia)
+                            @if ($comunidad->plan_emergencia)
                                 <span style="color: #000000;">
 
-                                    {{ '|  ' . $c->plan_emergencia }}
+                                    {{ '|  ' . $comunidad->plan_emergencia }}
 
                                 </span>
                             @endif
-
                         </td>
+                        @foreach ($meses as $mes)
+                            @php
+                                $mesCarbon = null;
+                                if ($mes instanceof \Carbon\CarbonInterface) {
+                                    $mesCarbon = $mes;
+                                } elseif ($mes instanceof \DateTimeInterface) {
+                                    $mesCarbon = \Carbon\Carbon::instance($mes);
+                                } elseif (is_string($mes)) {
+                                    $marcaTiempoMes = strtotime($mes);
+                                    if ($marcaTiempoMes !== false) {
+                                        $mesCarbon = \Carbon\Carbon::createFromTimestamp($marcaTiempoMes);
+                                    }
+                                }
 
-                        @foreach ($meses as $m)
-                            @for ($d = 1; $d <= $m->daysInMonth; $d++)
+                                $diasDelMes = $mesCarbon ? $mesCarbon->daysInMonth : 1;
+                            @endphp
+                            @for ($dia = 1; $dia <= $diasDelMes; $dia++)
                                 @php
-                                    $fecha = $m->copy()->day($d)->format('Y-m-d');
-                                    $info = $matrizColores[$c->c_id]['global'][$fecha] ?? null;
+                                    $fechaDia = $mesCarbon
+                                        ? $mesCarbon->copy()->day($dia)->format('Y-m-d')
+                                        : 'fecha-no-disponible';
+                                    $informacionCelda = $matrizColores[$comunidad->c_id]['global'][$fechaDia] ?? null;
 
-                                    $nivel = $info ? $info['nivel'] : 0;
+                                    $nivelAlerta = $informacionCelda ? $informacionCelda['nivel'] : 0;
 
-                                    $clase = $info ? 'c' . $nivel . ' celda-click' : '';
+                                    $claseCelda = $informacionCelda ? 'c' . $nivelAlerta . ' celdaClicable' : '';
 
-                                    if (isset($info['cambio']) && $info['cambio']) {
-                                        $clase .= ' marcadorCambio';
+                                    if (isset($informacionCelda['cambio']) && $informacionCelda['cambio']) {
+                                        $claseCelda .= ' marcadorCambio';
                                     }
                                 @endphp
 
-                                <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
-                                    data-zona="{{ $c->c_comunidad_autonoma }}" data-hora="{{ $info['hora'] ?? '' }}"
-                                    data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-                                    data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}"
-                                    data-num-eventos="{{ $info['num_eventos'] ?? 0 }}">
+                                <td class='{{ $claseCelda }}' data-fecha="{{ $fechaDia }}"
+                                    data-zona="{{ $comunidad->c_comunidad_autonoma }}"
+                                    data-hora="{{ $informacionCelda['hora'] ?? '' }}"
+                                    data-desc="{{ $informacionCelda['desc'] ?? 'No hay descripción disponible' }}"
+                                    data-pdf="{{ $informacionCelda['pdf'] ?? '' }}" data-nivel="{{ $nivelAlerta }}"
+                                    data-num-eventos="{{ $informacionCelda['num_eventos'] ?? 0 }}">
                                 </td>
                             @endfor
                         @endforeach
 
                     </tr>
 
+                    @if (!$esComunidadSimple)
+                        @foreach ($comunidad->provincias as $provincia)
+                            <tr class="filaProvincia">
 
+                                <td class="colNombre sangriaProvincia">{{ $provincia->p_provincia }}</td>
 
-                    @if (!$esSimple)
-                        @foreach ($c->provincias as $p)
-                            <tr class="fila-provincia">
+                                @foreach ($meses as $mes)
+                                    @php
+                                        $mesCarbon = null;
+                                        if ($mes instanceof \Carbon\CarbonInterface) {
+                                            $mesCarbon = $mes;
+                                        } elseif ($mes instanceof \DateTimeInterface) {
+                                            $mesCarbon = \Carbon\Carbon::instance($mes);
+                                        } elseif (is_string($mes)) {
+                                            $marcaTiempoMes = strtotime($mes);
+                                            if ($marcaTiempoMes !== false) {
+                                                $mesCarbon = \Carbon\Carbon::createFromTimestamp($marcaTiempoMes);
+                                            }
+                                        }
 
-                                <td class="col-nombre indent">{{ $p->p_provincia }}</td>
-
-                                @foreach ($meses as $m)
-                                    @for ($d = 1; $d <= $m->daysInMonth; $d++)
+                                        $diasDelMes = $mesCarbon ? $mesCarbon->daysInMonth : 1;
+                                    @endphp
+                                    @for ($dia = 1; $dia <= $diasDelMes; $dia++)
                                         @php
-                                            $fecha = $m->copy()->day($d)->format('Y-m-d');
-                                            $info = $matrizColores[$c->c_id][$p->p_id][$fecha] ?? null;
+                                            $fechaDia = $mesCarbon
+                                                ? $mesCarbon->copy()->day($dia)->format('Y-m-d')
+                                                : 'fecha-no-disponible';
+                                            $informacionCelda =
+                                                $matrizColores[$comunidad->c_id][$provincia->p_id][$fechaDia] ?? null;
 
-                                            $nivel = $info ? $info['nivel'] : 0;
+                                            $nivelAlerta = $informacionCelda ? $informacionCelda['nivel'] : 0;
 
-                                            $clase = $info ? 'c' . $nivel . ' celda-click' : '';
+                                            $claseCelda = $informacionCelda
+                                                ? 'c' . $nivelAlerta . ' celdaClicable'
+                                                : '';
 
-                                            if (isset($info['cambio']) && $info['cambio']) {
-                                                $clase .= ' marcadorCambio';
+                                            if (isset($informacionCelda['cambio']) && $informacionCelda['cambio']) {
+                                                $claseCelda .= ' marcadorCambio';
                                             }
                                         @endphp
 
-                                        <td class='{{ $clase }}' data-fecha="{{ $fecha }}"
-                                            data-zona="{{ $p->p_provincia }}" data-hora="{{ $info['hora'] ?? '' }}"
-                                            data-desc="{{ $info['desc'] ?? 'No hay descripción disponible' }}"
-                                            data-pdf="{{ $info['pdf'] ?? '' }}" data-nivel="{{ $nivel }}"
-                                            data-num-eventos="{{ $info['num_eventos'] ?? 0 }}">
+                                        <td class='{{ $claseCelda }}' data-fecha="{{ $fechaDia }}"
+                                            data-zona="{{ $provincia->p_provincia }}"
+                                            data-hora="{{ $informacionCelda['hora'] ?? '' }}"
+                                            data-desc="{{ $informacionCelda['desc'] ?? 'No hay descripción disponible' }}"
+                                            data-pdf="{{ $informacionCelda['pdf'] ?? '' }}"
+                                            data-nivel="{{ $nivelAlerta }}"
+                                            data-num-eventos="{{ $informacionCelda['num_eventos'] ?? 0 }}">
                                         </td>
                                     @endfor
                                 @endforeach
@@ -386,34 +451,28 @@
 
     </div>
 
+    <div id="modalDetalles" class="modalOculto">
 
+        <div class="modalContenido">
 
-    <div id="modalDetalles" class="modal-oculto">
+            <span class="cerrarModalBoton" onclick="cerrarModal()">&times;</span>
 
-        <div class="modal-contenido">
+            <h2 id="modalZona">ZONA</h2>
 
-            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <p class="modalSubtitulo">Fecha: <span id="modalFecha"></span> | Hora de la situación: <span
+                    id="modalHora"></span></p>
 
-            <h2 id="modal-zona">ZONA</h2>
-
-            <p class="modal-subtitulo">Fecha: <span id="modal-fecha"></span> | Hora de la situación: <span
-                    id="modal-hora"></span></p>
-
-
-
-            <div class="modal-caja-desc">
+            <div class="modalCajaDescripcion">
 
                 <strong>Descripción de la situación:</strong>
 
-                <p id="modal-desc"></p>
+                <p id="modalDescripcion"></p>
 
             </div>
 
+            <div id="modalCajaPdf" style="margin-top: 20px; text-align: center;">
 
-
-            <div id="modal-caja-pdf" style="margin-top: 20px; text-align: center;">
-
-                <a id="btn-descargar-pdf" href="#" target="_blank" class="btn-pdf">
+                <a id="botonDescargarPdf" href="#" target="_blank" class="botonPdf">
 
                     Ver / Descargar Documento Oficial
 
@@ -424,78 +483,63 @@
         </div>
 
     </div>
-
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            const tabla = document.querySelector('.matriz');
+            const tablaMatriz = document.querySelector('.matriz');
 
-            const tbody = tabla.querySelector('tbody');
+            const cuerpoTabla = tablaMatriz.querySelector('tbody');
 
-            const theadDias = tabla.querySelector('thead tr:nth-child(2)');
-
-
+            const encabezadoDias = tablaMatriz.querySelector('thead tr:nth-child(2)');
 
             // Lógica de Coordenadas
+            tablaMatriz.addEventListener('mouseover', function(evento) {
 
-            tabla.addEventListener('mouseover', function(e) {
+                if (evento.target.tagName === 'TD' && evento.target.closest('tbody')) {
 
-                if (e.target.tagName === 'TD' && e.target.closest('tbody')) {
-
-                    const celdaActual = e.target;
+                    const celdaActual = evento.target;
 
                     const filaActual = celdaActual.parentElement;
 
 
 
-                    document.querySelectorAll('.rastro-h, .rastro-v, .celda-foco, .header-foco').forEach(
-                        el => {
+                    document.querySelectorAll(
+                        '.rastroHorizontal, .rastroVertical, .celdaFoco, .encabezadoFoco').forEach(
+                        elemento => {
 
-                            el.classList.remove('rastro-h', 'rastro-v', 'celda-foco', 'header-foco');
+                            elemento.classList.remove('rastroHorizontal', 'rastroVertical', 'celdaFoco',
+                                'encabezadoFoco');
 
                         });
+                    const indiceColumna = Array.from(filaActual.children).indexOf(celdaActual);
 
+                    const indiceFila = Array.from(cuerpoTabla.children).indexOf(filaActual);
 
+                    celdaActual.classList.add('celdaFoco');
 
-                    const colIndex = Array.from(filaActual.children).indexOf(celdaActual);
+                    for (let indice = 0; indice < indiceColumna; indice++) {
 
-                    const rowIndex = Array.from(tbody.children).indexOf(filaActual);
-
-
-
-                    celdaActual.classList.add('celda-foco');
-
-
-
-                    for (let j = 0; j < colIndex; j++) {
-
-                        filaActual.children[j].classList.add('rastro-h');
+                        filaActual.children[indice].classList.add('rastroHorizontal');
 
                     }
 
+                    const filasCuerpo = cuerpoTabla.children;
 
+                    for (let indice = 0; indice < indiceFila; indice++) {
 
-                    const filas = tbody.children;
+                        if (filasCuerpo[indice].children[indiceColumna]) {
 
-                    for (let i = 0; i < rowIndex; i++) {
-
-                        if (filas[i].children[colIndex]) {
-
-                            filas[i].children[colIndex].classList.add('rastro-v');
+                            filasCuerpo[indice].children[indiceColumna].classList.add('rastroVertical');
 
                         }
 
                     }
 
+                    if (indiceColumna > 0) {
 
+                        const encabezadoDia = encabezadoDias.children[indiceColumna - 1];
 
-                    if (colIndex > 0) {
-
-                        const thDia = theadDias.children[colIndex - 1];
-
-                        if (thDia) thDia.classList.add('header-foco');
+                        if (encabezadoDia) encabezadoDia.classList.add('encabezadoFoco');
 
                     }
 
@@ -503,37 +547,35 @@
 
             });
 
+            tablaMatriz.addEventListener('mouseleave', function() {
 
+                document.querySelectorAll('.rastroHorizontal, .rastroVertical, .celdaFoco, .encabezadoFoco')
+                    .forEach(elemento => {
 
-            tabla.addEventListener('mouseleave', function() {
+                        elemento.classList.remove('rastroHorizontal', 'rastroVertical', 'celdaFoco',
+                            'encabezadoFoco');
 
-                document.querySelectorAll('.rastro-h, .rastro-v, .celda-foco, .header-foco').forEach(el => {
-
-                    el.classList.remove('rastro-h', 'rastro-v', 'celda-foco', 'header-foco');
-
-                });
+                    });
 
             });
 
+            document.addEventListener('click', function(evento) {
+                const celdaClicable = evento.target.closest('.celdaClicable');
 
+                if (celdaClicable) {
+                    document.getElementById('modalZona').innerText = celdaClicable.dataset.zona;
+                    document.getElementById('modalFecha').innerText = celdaClicable.dataset.fecha;
+                    document.getElementById('modalHora').innerText = celdaClicable.dataset.hora || '--:--';
+                    document.getElementById('modalDescripcion').innerHTML = celdaClicable.dataset.desc;
 
-           document.addEventListener('click', function(e) {
-                const td = e.target.closest('.celda-click');
+                    const botonPdf = document.getElementById('botonDescargarPdf');
+                    const contenedorPdf = document.getElementById('modalCajaPdf');
 
-                if (td) {
-                    document.getElementById('modal-zona').innerText = td.dataset.zona;
-                    document.getElementById('modal-fecha').innerText = td.dataset.fecha;
-                    document.getElementById('modal-hora').innerText = td.dataset.hora || '--:--';
-                    document.getElementById('modal-desc').innerHTML = td.dataset.desc;
-
-                    const btnPdf = document.getElementById('btn-descargar-pdf');
-                    const cajaPdf = document.getElementById('modal-caja-pdf');
-
-                    if (td.dataset.pdf) {
-                        btnPdf.href = '/storage/' + td.dataset.pdf;
-                        cajaPdf.style.display = 'block';
+                    if (celdaClicable.dataset.pdf) {
+                        botonPdf.href = '/storage/' + celdaClicable.dataset.pdf;
+                        contenedorPdf.style.display = 'block';
                     } else {
-                        cajaPdf.style.display = 'none';
+                        contenedorPdf.style.display = 'none';
                     }
 
                     document.getElementById('modalDetalles').style.display = 'block';
@@ -542,24 +584,19 @@
 
         });
 
-
-
         function cerrarModal() {
 
             document.getElementById('modalDetalles').style.display = 'none';
 
         }
 
+        window.onclick = function(evento) {
 
-
-        window.onclick = function(event) {
-
-            if (event.target == document.getElementById('modalDetalles')) {
+            if (evento.target === document.getElementById('modalDetalles')) {
 
                 cerrarModal();
 
             }
-
         }
     </script>
 @endsection

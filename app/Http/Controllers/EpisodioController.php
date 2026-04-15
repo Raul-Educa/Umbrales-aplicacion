@@ -111,7 +111,6 @@ class EpisodioController extends Controller
         ]);
     }
 
-    // --- NUEVA FUNCIÓN: Extrae y calcula los niveles de alerta para las tablas ---
     private function obtenerNivelesAlertaVarios($episodios)
     {
         $codigos = [];
@@ -174,7 +173,7 @@ class EpisodioController extends Controller
             'nivelesEstaciones' => $nivelesEstaciones
         ]);
     }
-
+// Vista espisodios historicos
     public function historicoGlobal()
     {
         $episodios = DB::table('umbrales_ranepisodio')
@@ -194,7 +193,7 @@ class EpisodioController extends Controller
         ]);
     }
 
-    // --- VISTAS POR CCAA ---
+    // Vista para los episodios activos por CCAA
     public function activosPorCCAA($id)
     {
         $episodios = DB::table('umbrales_ranepisodio')

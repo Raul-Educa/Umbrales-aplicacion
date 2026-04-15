@@ -9,17 +9,18 @@ use App\Models\UmbralesProvincia;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class EmergenciaController extends Controller
 {
     public function crear()
     {
-        $ccaaParaFormulario = \App\Models\UmbralesCcaa::where('c_comunidad_autonoma', 'NOT ILIKE', '%Arag%')
+        $ccaaParaFormulario = UmbralesCcaa::where('c_comunidad_autonoma', 'NOT ILIKE', '%Arag%')
             ->where('c_comunidad_autonoma', 'NOT ILIKE', '%Portugal%')
             ->where('c_comunidad_autonoma', 'NOT ILIKE', '%AY%')
             ->get();
 
-        $provinciasParaFormulario = \App\Models\UmbralesProvincia::all();
+        $provinciasParaFormulario = UmbralesProvincia::all();
 
         return view('auth.situacion_formulario', compact('ccaaParaFormulario', 'provinciasParaFormulario'));
     }
@@ -49,7 +50,6 @@ class EmergenciaController extends Controller
                 ->withErrors(['hora' => 'Error: La hora de la emergencia no puede ser futura']);
         }
 
-
         $provinciasIds = $request->input('provincias_ids', []);
         $tieneProvincias = UmbralesProvincia::where('c_id', $request->ccaa_id)->exists();
 
@@ -75,7 +75,6 @@ class EmergenciaController extends Controller
             }
         }
 
-
         $rutaPdf = null;
 
         if ($request->tipo_documento == 'pdf_oficial' && $request->hasFile('archivo_pdf')) {
@@ -98,7 +97,6 @@ class EmergenciaController extends Controller
             $rutaPdf = 'pdf_emergencia/' . $nombrePdf;
         }
 
-
         DB::transaction(function () use ($request, $rutaPdf, $provinciasIds) {
             foreach ($provinciasIds as $provId) {
                 SituacionEmergencia::create([
@@ -115,6 +113,35 @@ class EmergenciaController extends Controller
         });
 
         return redirect()->back()->with('success', 'Situación de emergencia registrada correctamente');
+    }
+
+    public function getEstadoActualPorCCAA($id)
+    {
+        $nombreComunidad = DB::table('umbrales_ccaa')->where('c_id', $id)->value('c_comunidad_autonoma')
+            ?? 'la comunidad seleccionada';
+
+        $estaciones = Cache::get('api_estado_actual_ccaa_' . (int) $id, collect())
+            ->sortByDesc('alerta')
+            ->values();
+
+        $resultadoFinal = $estaciones->isNotEmpty()
+            ? collect([strtoupper($nombreComunidad) => $estaciones])
+            : collect();
+
+        return view('auth.vista_estadoActual', [
+            'resultadoFinal' => $resultadoFinal,
+            'nombreComunidadSinAlertas' => $nombreComunidad,
+        ]);
+    }
+
+    public function getEstadoActualDatos()
+    {
+        $resultadoFinal = Cache::get('api_estado_actual_global', collect());
+
+        return view('auth.vista_estadoActual', [
+            'resultadoFinal' => $resultadoFinal,
+            'nombreComunidadSinAlertas' => 'la Cuenca del Tajo',
+        ]);
     }
 
     public function vistaPlanEmergencia()
@@ -178,13 +205,12 @@ class EmergenciaController extends Controller
 
                             if ($eventosHoy->count() > 0) {
                                 $huboCambio = ($estadoAnterior && $estadoAnterior->nivel > 0) || ($eventosHoy->count() > 1);
-                                
-                                // Contar eventos: estado anterior + eventos de hoy
+
                                 if ($estadoAnterior && $estadoAnterior->nivel > 0) {
                                     $contadorEventos++;
                                 }
                                 $contadorEventos += $eventosHoy->count();
-                                
+
                                 $historialDia = "<b>HISTORIAL DEL DÍA:</b><br><br>";
 
                                 if ($estadoAnterior && $estadoAnterior->nivel > 0) {
