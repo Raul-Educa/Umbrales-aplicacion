@@ -6,38 +6,54 @@ use Illuminate\Http\Request;
 use App\Models\SituacionEmergencia;
 use App\Models\UmbralesCcaa;
 use App\Models\UmbralesProvincia;
+use App\Services\EstadoActualSyncService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class EmergenciaController extends Controller
 {
     public function crear()
     {
-        $ccaaParaFormulario = \App\Models\UmbralesCcaa::where('c_comunidad_autonoma', 'NOT ILIKE', '%Arag%')
+        $ccaaParaFormulario = UmbralesCcaa::where('c_comunidad_autonoma', 'NOT ILIKE', '%Arag%')
             ->where('c_comunidad_autonoma', 'NOT ILIKE', '%Portugal%')
             ->where('c_comunidad_autonoma', 'NOT ILIKE', '%AY%')
             ->get();
 
-        $provinciasParaFormulario = \App\Models\UmbralesProvincia::all();
+        $provinciasParaFormulario = UmbralesProvincia::all();
 
         return view('auth.situacion_formulario', compact('ccaaParaFormulario', 'provinciasParaFormulario'));
     }
 
     public function guardar(Request $request)
     {
-        $request->validate([
+        $esFlujoDesdePlan = $request->input('return_to') === 'plan';
+
+        $reglasValidacion = [
             'ccaa_id' => 'required|exists:umbrales_ccaa,c_id',
             'nivel' => 'required|integer|min:0|max:5',
             'fecha' => 'required|date|before_or_equal:today',
             'hora' => 'required',
-            'tipo_documento' => 'required|in:pdf_oficial,texto_correo',
-            'texto_correo' => 'required_if:tipo_documento,texto_correo',
-            'archivo_pdf' => 'required_if:tipo_documento,pdf_oficial'
-        ], [
+        ];
+
+        if (!$esFlujoDesdePlan) {
+            $reglasValidacion['tipo_documento'] = 'required|in:pdf_oficial,texto_correo';
+            $reglasValidacion['texto_correo'] = 'required_if:tipo_documento,texto_correo';
+            $reglasValidacion['archivo_pdf'] = 'required_if:tipo_documento,pdf_oficial|file|mimes:pdf|max:1900';
+        } else {
+            $reglasValidacion['tipo_documento'] = 'nullable|in:pdf_oficial,texto_correo';
+            $reglasValidacion['texto_correo'] = 'nullable';
+            $reglasValidacion['archivo_pdf'] = 'nullable|file|mimes:pdf|max:1900';
+        }
+
+        $request->validate($reglasValidacion, [
             'fecha.before_or_equal' => 'Error: La fecha de la emergencia no puede ser futura',
             'texto_correo.required_if' => 'Error: Debes pegar el contenido del correo para generar el PDF.',
-            'archivo_pdf.required_if' => 'Error: Debes adjuntar un archivo PDF oficial.'
+            'archivo_pdf.required_if' => 'Error: Debes adjuntar un archivo PDF oficial.',
+            'archivo_pdf.max' => 'Error: El archivo PDF supera el tamaño máximo permitido (1.9 MB).'
         ]);
 
         $hoy = \Carbon\Carbon::now()->format('Y-m-d');
@@ -49,14 +65,22 @@ class EmergenciaController extends Controller
                 ->withErrors(['hora' => 'Error: La hora de la emergencia no puede ser futura']);
         }
 
+        $provinciasIds = (array) $request->input('provincias_ids', []);
+        $provinciasIds = array_values(array_unique(array_filter(array_map(function ($valor) {
+            return is_numeric($valor) ? (int) $valor : null;
+        }, $provinciasIds))));
 
-        $provinciasIds = $request->input('provincias_ids', []);
-        $tieneProvincias = UmbralesProvincia::where('c_id', $request->ccaa_id)->exists();
+        $provinciasDeLaCcaa = UmbralesProvincia::where('c_id', $request->ccaa_id)->get();
+        $tieneProvincias = $provinciasDeLaCcaa->isNotEmpty();
 
         if ($tieneProvincias && empty($provinciasIds)) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['provincias_ids' => 'Debe marcar al menos una provincia o seleccionar todas.']);
+            if ($request->input('alcance') === 'global') {
+                $provinciasIds = $provinciasDeLaCcaa->pluck('p_id')->map(fn($id) => (int) $id)->all();
+            } else {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['provincias_ids' => 'Debe marcar al menos una provincia o seleccionar todas.']);
+            }
         }
 
         $textoProvincias = "";
@@ -65,7 +89,14 @@ class EmergenciaController extends Controller
             $provinciasIds = [null];
             $textoProvincias = "Toda la Comunidad Autónoma";
         } else {
-            $provinciasDeLaCcaa = UmbralesProvincia::where('c_id', $request->ccaa_id)->get();
+            $idsValidosCcaa = $provinciasDeLaCcaa->pluck('p_id')->map(fn($id) => (int) $id)->all();
+            $provinciasIds = array_values(array_filter($provinciasIds, fn($id) => in_array((int) $id, $idsValidosCcaa, true)));
+
+            if (empty($provinciasIds)) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['provincias_ids' => 'No se han detectado provincias válidas para la comunidad seleccionada.']);
+            }
 
             if (count($provinciasIds) == $provinciasDeLaCcaa->count()) {
                 $textoProvincias = "Todas las provincias (Afectación a nivel autonómico)";
@@ -75,8 +106,9 @@ class EmergenciaController extends Controller
             }
         }
 
-
         $rutaPdf = null;
+        $ccaaSeleccionada = UmbralesCcaa::find($request->ccaa_id);
+        $nombreCcaa = $ccaaSeleccionada?->c_comunidad_autonoma ?? 'ccaa';
 
         if ($request->tipo_documento == 'pdf_oficial' && $request->hasFile('archivo_pdf')) {
             $archivo = $request->file('archivo_pdf');
@@ -89,20 +121,33 @@ class EmergenciaController extends Controller
                 'texto'      => $request->texto_correo,
                 'fecha'      => $request->fecha,
                 'hora'       => $request->hora,
-                'ccaa'       => UmbralesCcaa::find($request->ccaa_id)->c_comunidad_autonoma,
+                'ccaa'       => $nombreCcaa,
                 'provincias' => $textoProvincias
             ]);
 
-            $nombrePdf = time() . '_generado_correo.pdf';
+            $fechaPdf = \Carbon\Carbon::parse($request->fecha)->format('Y-m-d');
+            $horaPdf = preg_replace('/[^0-9]/', '', (string) $request->hora);
+            $horaPdf = $horaPdf !== '' ? $horaPdf : now()->format('His');
+            $ccaaSlug = \Illuminate\Support\Str::slug($nombreCcaa, '_');
+            $nombrePdf = $fechaPdf . '_' . $horaPdf . '_' . $ccaaSlug . '.pdf';
             Storage::disk('public')->put('pdf_emergencia/' . $nombrePdf, $pdfCorreo->output());
             $rutaPdf = 'pdf_emergencia/' . $nombrePdf;
         }
 
+        $nombreProvinciaPorId = $provinciasDeLaCcaa
+            ->pluck('p_provincia', 'p_id')
+            ->mapWithKeys(fn($nombre, $id) => [(int) $id => $nombre])
+            ->all();
 
-        DB::transaction(function () use ($request, $rutaPdf, $provinciasIds) {
+        DB::transaction(function () use ($request, $rutaPdf, $provinciasIds, $nombreProvinciaPorId, $textoProvincias) {
             foreach ($provinciasIds as $provId) {
+                $nombreProvincia = $provId === null
+                    ? $textoProvincias
+                    : ($nombreProvinciaPorId[(int) $provId] ?? null);
+
                 SituacionEmergencia::create([
                     'ccaa_id'      => $request->ccaa_id,
+                    'provincia'    => $nombreProvincia,
                     'provincia_id' => $provId,
                     'nivel'        => $request->nivel,
                     'fecha'        => $request->fecha,
@@ -114,7 +159,71 @@ class EmergenciaController extends Controller
             }
         });
 
+        if ($request->input('return_to') === 'plan') {
+            return redirect()->route('emergencias.vistaPlan')
+                ->with('success', 'Situación de emergencia registrada correctamente');
+        }
+
         return redirect()->back()->with('success', 'Situación de emergencia registrada correctamente');
+    }
+
+    private function sincronizarEstadoActualSiHaceFalta(EstadoActualSyncService $estadoActualSyncService): void
+    {
+        $ultimaSincronizacion = Cache::get('api_estado_actual_sync_at');
+        $cacheGlobal = Cache::get('api_estado_actual_global');
+        $requiereSincronizacion = empty($ultimaSincronizacion) || $cacheGlobal === null;
+
+        if (!$requiereSincronizacion) {
+            $timestamp = strtotime((string) $ultimaSincronizacion);
+            $requiereSincronizacion = ($timestamp === false) || (time() - $timestamp > 300);
+        }
+
+        if (!$requiereSincronizacion) {
+            return;
+        }
+
+        try {
+            $estadoActualSyncService->sincronizarCaches();
+        } catch (Throwable $e) {
+            Log::error('No se pudo refrescar la cache de estado actual desde la web', [
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function getEstadoActualPorCCAA($id, EstadoActualSyncService $estadoActualSyncService)
+    {
+        $this->sincronizarEstadoActualSiHaceFalta($estadoActualSyncService);
+
+        $nombreComunidad = DB::table('umbrales_ccaa')->where('c_id', $id)->value('c_comunidad_autonoma')
+            ?? 'la comunidad seleccionada';
+
+        $estaciones = Cache::get('api_estado_actual_ccaa_' . (int) $id, collect())
+            ->sortByDesc('alerta')
+            ->values();
+
+        $resultadoFinal = $estaciones->isNotEmpty()
+            ? collect([strtoupper($nombreComunidad) => $estaciones])
+            : collect();
+
+        return view('auth.vista_estadoActual', [
+            'resultadoFinal' => $resultadoFinal,
+            'nombreComunidadSinAlertas' => $nombreComunidad,
+            'ultimaSincronizacion' => Cache::get('api_estado_actual_sync_at'),
+        ]);
+    }
+
+    public function getEstadoActualDatos(EstadoActualSyncService $estadoActualSyncService)
+    {
+        $this->sincronizarEstadoActualSiHaceFalta($estadoActualSyncService);
+
+        $resultadoFinal = Cache::get('api_estado_actual_global', collect());
+
+        return view('auth.vista_estadoActual', [
+            'resultadoFinal' => $resultadoFinal,
+            'nombreComunidadSinAlertas' => 'la Cuenca del Tajo',
+            'ultimaSincronizacion' => Cache::get('api_estado_actual_sync_at'),
+        ]);
     }
 
     public function vistaPlanEmergencia()
@@ -178,13 +287,12 @@ class EmergenciaController extends Controller
 
                             if ($eventosHoy->count() > 0) {
                                 $huboCambio = ($estadoAnterior && $estadoAnterior->nivel > 0) || ($eventosHoy->count() > 1);
-                                
-                                // Contar eventos: estado anterior + eventos de hoy
+
                                 if ($estadoAnterior && $estadoAnterior->nivel > 0) {
                                     $contadorEventos++;
                                 }
                                 $contadorEventos += $eventosHoy->count();
-                                
+
                                 $historialDia = "<b>HISTORIAL DEL DÍA:</b><br><br>";
 
                                 if ($estadoAnterior && $estadoAnterior->nivel > 0) {

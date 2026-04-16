@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Reporte de Situación - {{ strtoupper($ccaa) }}</title>
+<title>Reporte de Situación - {{ strtoupper($ccaa) }} - {{ \Carbon\Carbon::parse($fecha)->format('d/m/Y') }}</title>
 
 <style>
     @page {

@@ -28,11 +28,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/cerrarSesion', [AuthController::class, 'cerrarSesion']);
 
-// ==========================================
 // VISTAS Y GESTIÓN DE USUARIOS
-// ==========================================
 
-// 1. Mostrar la página (Llama a la función gestionarUsuarios de tu controlador)
+// 1. Mostrar la página (Llama a la función gestionarUsuarios)
 Route::get('/confUsuarios', [UserController::class, 'gestionarUsuarios'])->name('confUsuarios');
 
 // 2. Procesar la creación del usuario (POST)
@@ -78,7 +76,11 @@ Route::post('/emergencias/guardar', [EmergenciaController::class, 'guardar'])->n
 
 Route::get('/emergencias/vista-plan', [EmergenciaController::class, 'vistaPlanEmergencia'])->name('emergencias.vistaPlan');
 
+// Ruta para el monitor en tiempo real (GLOBAL - Toda la cuenca)
+Route::get('/estado-actual', [App\Http\Controllers\EmergenciaController::class, 'getEstadoActualDatos'])->name('estado.actual');
 
+// Ruta para el monitor en tiempo real (POR COMUNIDAD AUTÓNOMA)
+Route::get('/ccaa/{id}/estado-actual', [App\Http\Controllers\EmergenciaController::class, 'getEstadoActualPorCCAA'])->name('ccaa.estadoActual');
 
 /*
 Solo la he usado o se usara para recargar desde la URL

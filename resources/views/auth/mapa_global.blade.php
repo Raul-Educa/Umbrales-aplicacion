@@ -36,7 +36,8 @@
     </style>
 
     <div class="container-fluid mb-4 mt-3">
-        <h3 style="color: #475569; font-weight: 600; margin-bottom: 15px;">🗺️ {{ $titulo }}</h3>
+        <h3 style="color: #475569; font-weight: 600; margin-bottom: 15px;"> {{ $titulo }}</h3>
+
 
         <div class="panel-filtros">
 
@@ -62,10 +63,10 @@
 
             <select id="filtro-alerta" class="filtro-control">
                 <option value="todos">Cualquier Estado</option>
-                <option value="0">🟢 Normalidad</option>
-                <option value="1">🟡 Alerta Amarilla</option>
-                <option value="2">🟠 Alerta Naranja</option>
-                <option value="3">🔴 Alerta Roja</option>
+                <option value="0"> Normalidad</option>
+                <option value="1"> Alerta Amarilla</option>
+                <option value="2"> Alerta Naranja</option>
+                <option value="3"> Alerta Roja</option>
             </select>
         </div>
 
@@ -111,7 +112,7 @@
 
                         var marcador = L.marker([lat, lng], { icon: iconoPersonalizado });
 
-                        // NUEVO: Popup con el valor real
+                        // valor real
                         var unidad = punto.tipo === 'embalse' ? 'hm³' : 'm³/s';
                         var contenidoPopup = `
                             <div class="popup-header">${punto.nombre}</div>
@@ -135,7 +136,7 @@
 
             dibujarMapa(todosLosPuntos);
 
-            // NUEVO: Lógica de filtros actualizada (incluye búsqueda por texto)
+            // Filtros para el mapa
             function aplicarFiltros() {
                 var textoFiltro = document.getElementById('filtro-texto').value.toLowerCase().trim();
                 var tipoFiltro = document.getElementById('filtro-tipo').value;
