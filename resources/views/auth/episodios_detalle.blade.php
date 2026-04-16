@@ -347,9 +347,9 @@
                     {{-- Estado Actual --}}
                     <td>
                         <span class="status-dot dot-{{ $e->nivel_alerta }}"></span>
-                        <b>{{ $e->nivel_alerta == 3 ? 'ALERTA 3' : ($e->nivel_alerta == 2 ? 'ALERTA 2' : ($e->nivel_alerta == 1 ? 'ALERTA 1' : 'NORMAL')) }}</b>
+                        <b>{{ $e->nivel_alerta == 3 ? 'ALERTA ROJA' : ($e->nivel_alerta == 2 ? 'ALERTA NARANJA' : ($e->nivel_alerta == 1 ? 'ALERTA AMARILLA' : 'NORMAL')) }}</b>
                     </td>
-
+{{-- Fecha/Hora --}}
                     <td>{{ $e->hora ?? '---' }}</td>
 
                     {{-- Gráfico --}}

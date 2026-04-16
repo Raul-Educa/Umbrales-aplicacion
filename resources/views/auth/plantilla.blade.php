@@ -352,7 +352,7 @@
 
         <nav class="barraLateral">
 
-            <div class="tituloSeccion">Gestión de Episodios</div>
+            <div class="tituloSeccion">TIEMPO REAL</div>
 
             <ul style="list-style:none;padding:0;margin:0;">
 
@@ -376,6 +376,7 @@
 
 
                 <li>
+                    <div class="tituloSeccion">Gestión de Episodios</div>
                     <input type="checkbox" id="menuTajo" class="checkMenu">
 
                     <label for="menuTajo" class="enlaceDesplegable">

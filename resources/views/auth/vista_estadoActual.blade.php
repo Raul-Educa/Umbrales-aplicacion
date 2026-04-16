@@ -60,7 +60,10 @@
                 Actualizar Datos
             </button>
             <div style="color: #718096; font-size: 0.7rem; margin-top: 5px;">
-                Sincronizado: {{ now()->format('H:i:s') }}
+                Sincronizado: {{ $ultimaSincronizacion ? \Carbon\Carbon::parse($ultimaSincronizacion)->format('H:i:s') : 'Sin datos' }}
+            </div>
+            <div id="autoRefreshInfo" style="color: #94a3b8; font-size: 0.68rem; margin-top: 3px;">
+                Actualización automática en 05:00
             </div>
         </div>
     </div>
@@ -141,5 +144,29 @@
             <p style="color: #64748b;">No hay estaciones alarmadas en este momento.</p>
         </div>
     @endforelse
+
+    <script>
+        (() => {
+            const INTERVALO_MS = 5 * 60 * 1000;
+            const info = document.getElementById('autoRefreshInfo');
+            const inicio = Date.now();
+
+            const timer = setInterval(() => {
+                const transcurrido = Date.now() - inicio;
+                const restante = Math.max(INTERVALO_MS - transcurrido, 0);
+                const minutos = String(Math.floor(restante / 60000)).padStart(2, '0');
+                const segundos = String(Math.floor((restante % 60000) / 1000)).padStart(2, '0');
+
+                if (info) info.textContent = `Actualización automática en ${minutos}:${segundos}`;
+
+                if (restante <= 0) {
+                    clearInterval(timer);
+                    const destino = new URL(window.location.href);
+                    destino.searchParams.set('_autorefresh', Date.now().toString());
+                    window.location.replace(destino.toString());
+                }
+            }, 250);
+        })();
+    </script>
 
 @endsection
